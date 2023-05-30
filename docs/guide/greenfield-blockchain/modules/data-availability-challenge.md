@@ -26,7 +26,7 @@ were not included will not be rewarded for the data availability challenge.
 
 ![Data Availability Challenge Workflow](https://raw.githubusercontent.com/bnb-chain/greenfield-whitepaper/main/assets/19.2%20Data%20Availability%20Challenge.jpg)
 
-<div style={{textAlign:"center"}}><i>Data Availability Challenge Workflow</i></div>
+<div style={{textAlign:'center'}}><i>Data Availability Challenge Workflow</i></div>
 
 The Workflow for the Data Availability Challenge is as Follows:
 
