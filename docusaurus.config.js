@@ -9,7 +9,7 @@ const config = {
   title: "BNB Greenfield",
   tagline: "Dinosaurs are cool",
   url: "https://your-docusaurus-test-site.com",
-  baseUrl: "/bnbgreenfield-docs",
+  baseUrl: "/bnbgreenfield-docs/",
   onBrokenLinks: "throw",
   onBrokenMarkdownLinks: "warn",
   favicon: "img/favicon.ico",
