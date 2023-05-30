@@ -11,7 +11,7 @@ The Manager module is responsible for the management work within the SP.
 ## Overview
 ![manager-architecture](../../../../static/asset/08-SP-Manager.jpg)
 
-<div style="align:center"><i>Manager Architecture</i></div>
+<div style={{textAlign:"center"}}><i>Manager Architecture</i></div>
 
 ### SP Meta Refresher
 It is responsible for periodically fetching the metadata from the chain to the internal database, 
