@@ -165,4 +165,4 @@ If you are a developer, you can build your projects and interact with Greenfield
 resources you can refer to:
 1. [Greenfield Go SDK](https://github.com/bnb-chain/greenfield-go-sdk)
 2. [Greenfield JS SDK](https://github.com/bnb-chain/greenfield-js-sdk)
-3. [Build DApps](./dapp)
+3. [Build DApps](../dapp/overview.md)
