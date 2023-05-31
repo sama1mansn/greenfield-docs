@@ -195,7 +195,7 @@ const sidebars = {
     {type: 'doc', id: 'api-sdk/grpc-rest'},
     {type: 'doc', id: 'api-sdk/events'},
     {type: 'doc', id: 'api-sdk/endpoints'},
-    {type: 'doc', id: 'api-sdk/grpc-rest'},
+    //{type: 'doc', id: 'api-sdk/grpc-rest'},
     {
       type:"category",
       label: "Storage Provider REST",
