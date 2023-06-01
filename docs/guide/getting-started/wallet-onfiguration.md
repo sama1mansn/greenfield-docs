@@ -20,12 +20,12 @@ to install it.
 
 3. Find **BNB Smart Chain Testnet**, and click **Add To Metamask**.
 
-![](../../../static/asset/202-Greenfield-BSC-Testnet-Chain-List.png)
+<img width="378" alt="202-Greenfield-BSC-Testnet-Chain-List" src="https://github.com/RumeelHussainbnb/bnbgreenfield-docs/assets/93580180/0f9a229a-11cd-4f27-a895-b584a0ac4219"  style={{width:"40%"}}/>
+
 
 4. When MetaMask prompts a window, click **Approve**.
 
-![](../../../static/asset/203-Approve-Add-Greenfield-BSC-Testnet.png)
-
+<img width="346" alt="203-Approve-Add-Greenfield-BSC-Testnet" src="https://github.com/RumeelHussainbnb/bnbgreenfield-docs/assets/93580180/97dcc22d-28de-4176-9b24-bcafa716f7b9" style={{width:"40%"}}/>
 
 ## Add Greenfield Testnet Network
 1. Visit [BNBChain List](https://www.bnbchainlist.org/).
