@@ -20,7 +20,7 @@ BNB Greenfield is an innovative blockchain and storage platform that seeks to un
 
 Clone the reository and run the following commands.
 
-### Local Development
+### Installing Dependencies
 
 * Install the packages.
 
