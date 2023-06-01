@@ -26,13 +26,13 @@ Clone the reository and run the following commands.
 
 Using `npm`
 
-```
-npm install
+```bash
+$ npm install
 ```
 
 Using Yarn
 
-```
+```bash
 $ yarn install
 ```
 
@@ -40,13 +40,13 @@ $ yarn install
 
 Using `npm`
 
-```
-npm run start 
+```bash
+$ npm run start 
 ```
 
 Using Yarn
 
-```
+```bash
 $ yarn start
 ```
 
@@ -57,30 +57,44 @@ We recommend to use the yarn package for building and deploying this website.
 
 Using `npm`
 
-```
-npm run build 
+```bash
+$ npm run build 
 ```
 
 Using Yarn
 
-```
+```bash
 $ yarn run build
 ```
 
 This command generates static content into the `build` directory and can be served using any static contents hosting service.
+
+### Build and Serve locally
+
+Using `npm`
+
+```bash
+$ npm run start 
+```
+
+Using Yarn
+
+```bash
+$ yarn start 
+```
 
 ### Serve Locally after build is created
 
 Using `npm`
 
 ```bash
-npm run serve
+$ npm run serve
 ```
 
 Using Yarn
 
 ```bash
-$ yarn run serve
+$ yarn serve
 ```
 
 The website is run locally on your default browser on http://localhost:3000.
