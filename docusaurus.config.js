@@ -73,6 +73,7 @@ const config = {
               {
                 type: 'doc',
                 label: 'API Reference',
+                sidebarid: 'apiReferenceSidebar',
                 docId: 'api-sdk/grpc-rest',
 
               },

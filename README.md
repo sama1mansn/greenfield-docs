@@ -5,9 +5,9 @@ BNB Greenfield is an innovative blockchain and storage platform that seeks to un
 
 ### Prerequisites
 
-  - **Node** _version >= 14 or above_
+  - **Node** _version >= 16 or above_
     - _node -v_
-      - v16.13.0
+      - v16.14.0
      
   - **npm** _--version_
     - 8.1.0

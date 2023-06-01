@@ -193,9 +193,16 @@ const sidebars = {
 
   apiReferenceSidebar:[
     {type: 'doc', id: 'api-sdk/grpc-rest'},
+    {
+      type: "category",
+      label: "API Reference",
+      items:[
+        {type: 'doc', id:'greenfield-api/grpc-rest'},
+      ]
+    },
     {type: 'doc', id: 'api-sdk/events'},
     {type: 'doc', id: 'api-sdk/endpoints'},
-    //{type: 'doc', id: 'api-sdk/grpc-rest'},
+    
     {
       type:"category",
       label: "Storage Provider REST",
@@ -243,10 +250,12 @@ const sidebars = {
       type: "category",
       label: "Greenfield Blockchain API",
       link: {
-        type: "generated-index",
-        title: "BNB Greenfield- gRPC Gateway docs",
-        description: "REST interface for state queries of BNB Green",
-        slug: "/greenfield-api"
+        //type: "generated-index",
+        type: 'doc',
+        id: 'greenfield-api/grpc-rest',
+       // title: "BNB Greenfield- gRPC Gateway docs",
+        //description: "REST interface for state queries of BNB Green",
+        //slug: "/greenfield-api"
       },
       // @ts-ignore
       items: require("./docs/greenfield-api/sidebar.js")
