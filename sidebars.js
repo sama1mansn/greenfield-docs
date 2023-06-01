@@ -241,7 +241,7 @@ const sidebars = {
   openApiSidebar: [
     {
       type: "category",
-      label: "API Playground",
+      label: "Greenfield Blockchain API",
       link: {
         type: "generated-index",
         title: "BNB Greenfield- gRPC Gateway docs",

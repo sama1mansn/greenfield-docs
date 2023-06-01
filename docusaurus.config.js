@@ -66,15 +66,24 @@ const config = {
             to: "/docs/guide/introduction/overview"
           },
           {
-            label: "API Reference",
+            type: 'dropdown',
+            label: "API",
             position: "left",
-            to: "/docs/api-sdk/grpc-rest"
+            items:[
+              {
+                type: 'doc',
+                label: 'API Reference',
+                docId: 'api-sdk/grpc-rest',
+
+              },
+              {
+                type: 'doc',
+                label: "Greenfield Blockchain API",
+                docId: 'greenfield-api/bridge-params'
+              },
+            ]
           },
-          {
-            label: "API Playground",
-            position: "left",
-            to: "/docs/greenfield-api"
-          },
+          
           {
             label: "Release Notes",
             position:"left",
