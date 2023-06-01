@@ -8,7 +8,6 @@ order: 1
 
 This document presents an overview of all the endpoints a node exposes: gRPC, REST as well as some other endpoints.
 
-For more details Swagger API documentation, please refer to [Greenfield Blockchain API](https://greenfield.bnbchain.org/openapi).
 
 :::info
 Since Greenfield Blockchain is based on Cosmos, The majority of the content in this page is copied from the
@@ -64,19 +63,10 @@ server should bind to. Defaults to `tcp://0.0.0.0:1317`.
 * some additional API configuration options are defined in `~/.gnfd/config/app.toml`, along with comments, 
 please refer to that file directly.
 
-### Swagger
-
-A [Swagger](https://swagger.io/) (or OpenAPIv2) specification file is exposed under the `/swagger` route on the API server. 
-Swagger is an open specification describing the API endpoints a server serves, including description, input arguments, 
-return types and much more about each endpoint.
-
-Enabling the `/swagger` endpoint is configurable inside `~/.gnfd/config/app.toml` via the `api.swagger` field, which is set to true by default.
-
 
 ## Tendermint RPC
 
-Independently of the Cosmos SDK, Tendermint also exposes an RPC server. This RPC server can be configured by tuning 
-parameters under the `rpc` table in the `~/.gnfd/config/config.toml`, the default listening address is `tcp://0.0.0.0:26657`. 
+Independently of the Cosmos SDK, Tendermint also exposes an RPC server. This RPC server can be configured by tuning parameters under the `rpc` table in the `~/.gnfd/config/config.toml`, the default listening address is `tcp://0.0.0.0:26657`. 
 An OpenAPI specification of all Tendermint RPC endpoints is available [here](https://docs.tendermint.com/master/rpc/).
 
 Some Tendermint RPC endpoints are directly related to the Cosmos SDK:

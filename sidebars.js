@@ -192,14 +192,23 @@ const sidebars = {
   ],
 
   apiReferenceSidebar:[
-    {type: 'doc', id: 'api-sdk/grpc-rest'},
+    
     {
       type: "category",
       label: "API Reference",
-      items:[
-        {type: 'doc', id:'greenfield-api/grpc-rest'},
-      ]
+      /*items:[
+        {type: 'doc', id: 'api-sdk/grpc-rest', label:'Overview'},
+        //{type: 'doc', id:'greenfield-api/greenfield-grpc-gateway-docs'},
+        {
+          type: 'link',
+          label: 'API', // The link label
+          href: '/docs/greenfield-api/grpc-rest', // The external URL
+        }
+      ]*/
+     link:{type: 'doc', id: 'api-sdk/grpc-rest'},
+     items:["greenfield-api/grpc-rest"]
     },
+
     {type: 'doc', id: 'api-sdk/events'},
     {type: 'doc', id: 'api-sdk/endpoints'},
     

@@ -7,7 +7,7 @@ order: 1
 
 This document presents an overview of all the endpoints a node exposes: gRPC, REST as well as some other endpoints.
 
-For more details Swagger API documentation, please refer to [Greenfield Blockchain API](https://greenfield.bnbchain.org/openapi).
+For more details, please refer to [Greenfield Blockchain API](../greenfield-api/grpc-rest.md).
 
 :::info
 Since Greenfield Blockchain is based on Cosmos, The majority of the content in this page is copied from the
