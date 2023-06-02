@@ -267,8 +267,9 @@ const sidebars = {
         //slug: "/greenfield-api"
       },
       // @ts-ignore
-      items: require("./docs/greenfield-api/sidebar.js")
-    }
+      items: require("./docs/greenfield-api/sidebar.js"),
+    },
+    
   ]
 
 };
