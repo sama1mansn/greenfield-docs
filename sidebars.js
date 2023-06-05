@@ -223,26 +223,27 @@ const sidebars = {
         "api-sdk/storgae-provider-rest/list_bucket_read_records",
         "api-sdk/storgae-provider-rest/get_user_buckets",
         "api-sdk/storgae-provider-rest/list_objects_by_bucket",
+        {
+          type:"category",
+          label: "Reference",
+          items:[
+            "api-sdk/storgae-provider-rest/referenece/virtual_hosting_of_buckets",
+            "api-sdk/storgae-provider-rest/referenece/gnfd_headers"
+          ]
+        },
+        {
+          type:"category",
+          label: "Auth",
+          items:[
+            "api-sdk/storgae-provider-rest/auth/get_nonce",
+            "api-sdk/storgae-provider-rest/auth/update_key",
+            "api-sdk/storgae-provider-rest/auth/list_key",
+            "api-sdk/storgae-provider-rest/auth/delete_key",
+          ]
+        },
       ]
     },
-    {
-      type:"category",
-      label: "Reference",
-      items:[
-        "api-sdk/storgae-provider-rest/referenece/virtual_hosting_of_buckets",
-        "api-sdk/storgae-provider-rest/referenece/gnfd_headers"
-      ]
-    },
-    {
-      type:"category",
-      label: "Auth",
-      items:[
-        "api-sdk/storgae-provider-rest/auth/get_nonce",
-        "api-sdk/storgae-provider-rest/auth/update_key",
-        "api-sdk/storgae-provider-rest/auth/list_key",
-        "api-sdk/storgae-provider-rest/auth/delete_key",
-      ]
-    },
+    
     { type:'doc', id:'api-sdk/sdk'}
   ],
 
