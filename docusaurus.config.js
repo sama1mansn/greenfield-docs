@@ -29,7 +29,7 @@ const config = {
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
           editUrl:
-            "https://github.com/bnb-chain/bnbgreenfield-docs",
+            "https://github.com/bnb-chain/bnbgreenfield-docs/blob/master/",
           docLayoutComponent: "@theme/DocPage",
           docItemComponent: "@theme/ApiItem" // Derived from docusaurus-theme-openapi
         },
