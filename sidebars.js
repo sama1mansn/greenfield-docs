@@ -14,7 +14,7 @@
 /** @type {import('@docusaurus/plugin-content-docs').SidebarsConfig} */
 const sidebars = {
 
-  
+
   guideSidebar:[
     {
       type: "category",
@@ -192,7 +192,7 @@ const sidebars = {
   ],
 
   apiReferenceSidebar:[
-    
+
     {
       type: "category",
       label: "API Reference",
@@ -211,7 +211,7 @@ const sidebars = {
 
     {type: 'doc', id: 'api-sdk/events'},
     {type: 'doc', id: 'api-sdk/endpoints'},
-    
+
     {
       type:"category",
       label: "Storage Provider REST",
@@ -233,28 +233,26 @@ const sidebars = {
         },
         {
           type:"category",
-          label: "Auth",
+          label: "Common",
           items:[
-            "api-sdk/storgae-provider-rest/auth/get_nonce",
-            "api-sdk/storgae-provider-rest/auth/update_key",
-            "api-sdk/storgae-provider-rest/auth/list_key",
-            "api-sdk/storgae-provider-rest/auth/delete_key",
+            "api-sdk/storgae-provider-rest/common/error",
+            "api-sdk/storgae-provider-rest/common/get_approval_header",
           ]
         },
       ]
     },
-    
+
     { type:'doc', id:'api-sdk/sdk'}
   ],
 
   faqSidebar:[
     {type: 'doc', id: 'faq/greenfield-faqs'},
   ],
-  
+
   releaseNotesSidebar:[
     {type: 'doc', id: 'release-notes/releaseNotes'},
   ],
-  
+
   openApiSidebar: [
     {
       type: "category",
@@ -270,7 +268,7 @@ const sidebars = {
       // @ts-ignore
       items: require("./docs/greenfield-api/sidebar.js"),
     },
-    
+
   ]
 
 };
