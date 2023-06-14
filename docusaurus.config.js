@@ -7,8 +7,8 @@ const darkCodeTheme = require("prism-react-renderer/themes/dracula");
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: "BNB Greenfield",
-  tagline: "Dinosaurs are cool",
-  url: "https://your-docusaurus-test-site.com",
+  tagline: "Decentralized Data Storage and Economy",
+  url: "https://bnb-chain.github.io/",
   baseUrl: "/bnbgreenfield-docs/",
   onBrokenLinks: "throw",
   onBrokenMarkdownLinks: "warn",
@@ -16,7 +16,7 @@ const config = {
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
-  organizationName: "RumeelHussainbnb", // Usually your GitHub org/user name.
+  organizationName: "bnb-chain", // Usually your GitHub org/user name.
   projectName: "bnbgreenfield-docs", // Usually your repo name.
 
   presets: [
@@ -29,13 +29,13 @@ const config = {
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
           editUrl:
-            "https://github.com/RumeelHussainbnb/bnbgreenfield-docs",
+            "https://github.com/bnb-chain/bnbgreenfield-docs",
           docLayoutComponent: "@theme/DocPage",
           docItemComponent: "@theme/ApiItem" // Derived from docusaurus-theme-openapi
         },
         blog: {
           showReadingTime: true,
-          editUrl: "https://www.bnbchain.org/en/blog/",
+          editUrl: "https://github.com/bnb-chain/bnbgreenfield-docs",
 
         },
         theme: {
@@ -98,7 +98,7 @@ const config = {
             to: "/docs/faq/greenfield-faqs"
           },
           {
-            href: 'https://github.com/RumeelHussainbnb/bnbgreenfield-docs',
+            href: 'https://github.com/bnb-chain/bnbgreenfield-docs',
             position: 'right',
             className: 'header-github-link',
             'aria-label': 'GitHub repository',
