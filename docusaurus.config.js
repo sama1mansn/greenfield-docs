@@ -35,7 +35,7 @@ const config = {
         },
         blog: {
           showReadingTime: true,
-          editUrl: "https://github.com/bnb-chain/bnbgreenfield-docs",
+          editUrl: "https://github.com/bnb-chain/bnbgreenfield-docs/blob/master/",
 
         },
         theme: {
