@@ -18,7 +18,7 @@ The following lists the recommended hardware requirements:
 
 1. Build Greenfield Blockchain
 
-**Note** Greenfield blockchain uses a lib which uses `cgo`, so you should set `cgo env var`; in addition, you should install `gcc` compiler in your OS.
+**Note** Greenfield blockchain uses a lib which uses `cgo`, so you should set cgo env var; in addition, you should install `gcc` compiler in your OS.
 
 ```shell
 git clone https://github.com/bnb-chain/greenfield.git
@@ -155,6 +155,18 @@ deployment/localup/local_env/
 ├── ...
 ```
 
+:::note Recompile SP
+
+If you want to modify config.toml in different sp directories or recompile gnfd-sp binary file, you can use the following commands to reset and start local sp:
+
+```shell
+cd greenfield-storage-provider/
+bash ./deployment/localup/localup.sh --reset
+bash ./deployment/localup/localup.sh --start
+```
+
+:::
+
 5. Supported commands
 
 ```shell
@@ -168,16 +180,93 @@ Usage: deployment/localup/localup.sh [option...] {help|generate|reset|start|stop
    --reset           reset env
    --start           start storage providers
    --stop            stop storage providers
-   --clean           clean local sp env"
+   --clean           clean local sp env
    --print           print sp local env work directory
 ```
 
-6. Supplement
+## Operate With SP
 
-If users want to modify config.toml in different sp directories or recompile gnfd-sp binary file, you can use the following commands to reset and start local sp:
+If you have already started Greenfield blockchain and Greenfield SP successfully in local, you can use Greenfield Cmd to operate with SP such as CreateBucket, PutObject and DownloadObject. Detailed info about Greenfield Cmd can be found [here](../../getting-started/interact-with-greenfield.md).
+
+:::tip
+We strongly recommend you reading [Greenfield Cmd](../../getting-started/interact-with-greenfield.md). It will help you explore the functions of Greenfield blockchain and SP.
+:::
+
+Next, We provide you a hand by hand tutorial to operate with chain and SP.
+
+### 1. Generate your test account
+
+We firstly need to generate a test account and private key:
 
 ```shell
-cd greenfield-storage-provider/
-bash ./deployment/localup/localup.sh --reset
-bash ./deployment/localup/localup.sh --start
+cd greenfield/
+# this command will generate a test account whose name is testkey, you can change its name
+./build/bin/gnfd keys add testkey --keyring-backend os
+# export the private key of test account
+./build/bin/gnfd keys export testkey --unarmored-hex --unsafe --keyring-backend os
 ```
+
+### 2. Transefer some BNB tokens to test account
+
+After generating test account, there are no any tokens in this account. We should transefer some BNB tokens:
+
+```shell
+cd greenfield/
+# transefer 5000 BNB tokens
+./gnfd tx bank send validator0 {generated_test_account_address} 500000000000000000000BNB --home /{your_greenfield_path}/greenfield/deployment/localup/.local/validator0 --keyring-backend test --node http://localhost:26750 -y
+# query your account balances
+./gnfd q bank balances {generated_test_account_address} --node http://localhost:26750
+```
+
+### 3. Use cmd to send requests
+
+If you come in this step, congratulations, you can operate with your own private chain and SP.
+
+First, we need to configure cmd:
+
+```shell
+cd greenfield-cmd/
+make build
+cd build/
+# generate a keystore file to manage private key information
+touch key.txt & echo ${TEST_ACCOUNT_PRIVATE_KEY} > key.txt
+touch password.txt & echo "test_sp_function" > password.txt
+./gnfd-cmd --home ./ keystore generate --privKeyFile key.txt --passwordfile password.txt
+
+# construct config.toml
+touch config.toml
+{
+   echo rpcAddr = \"http://localhost:26750\"
+   echo chainId = \"greenfield_9000-121\"
+} > config.toml
+```
+
+Second, you can do some operations with SP:
+
+1. Create bucket
+
+```shell
+# list current available SPs
+./gnfd-cmd -c ./config.toml --home ./ sp ls
+# random choose one SP to create bucket
+./gnfd-cmd -c ./config.toml --home ./ bucket create gnfd://${BUCKET_NAME}
+# head bucket info
+./gnfd-cmd -c ./config.toml --home ./ bucket head gnfd://${BUCKET_NAME}
+# choose one sp to create bucket, operator_address is shown in sp ls result
+./gnfd-cmd -c ./config.toml --home ./ bucket create --primarySP ${operator_address} gnfd://${BUCKET_NAME}
+```
+
+2. PutObject & GetObject
+
+```shell
+# generate a 17MB random file
+dd if=/dev/urandom of=./random_file bs=17M count=1
+# put object
+./gnfd-cmd -c ./config.toml --home ./ object put --contentType "application/octet-stream" ./random_file gnfd://${BUCKET_NAME}/random_file
+# get object
+./gnfd-cmd -c ./config.toml --home ./ object get gnfd://spe2etestbucket/random_file ./new_random_file
+```
+
+Users can use md5 to compare your generated file and downloaded file whether is the same.
+
+Ok, we just show some basic functions here, you can explore more functions with [Greenfield Cmd](../../getting-started/interact-with-greenfield.md).

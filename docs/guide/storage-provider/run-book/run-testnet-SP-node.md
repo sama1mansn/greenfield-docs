@@ -16,14 +16,14 @@ The following lists the recommended hardware requirements:
 * Piece Store: AWS S3, MinIO(Beta);
 * 5 Greenfield accounts with enough BNB tokens.
 
-::: info
+:::danger IMPORTANT
 Each storage provider will hold 5 different accounts serving different purposes:
 
-* Operator Account(**cold wallet**): Used to edit the information of the StorageProvider. Please make sure it have enough BNB to deposit the create storage provider proposal(1 BNB) and pay the gas fee of EditStorageProvider transaction.
-* Funding Account(**hot wallet**): Used to deposit staking tokens and receive earnings. It is important to ensure that there is enough money in this account, and the user must submit a deposit as a guarantee. At least 1000+ BNB are required for staking.
-* Seal Account(**hot wallet**): Used to seal the user's object. Please make sure it has enough BNB to pay the gas fee of SealObject transaction.
-* Approval Account(**cold wallet**): Used to approve user's requests. This account does not require holding BNB tokens.
-* GC Account(**cold wallet**): It is a special address for sp and is used by sp to clean up local expired or unwanted storage. Please make sure it has enough BNB tokens beacuse it's going to keep sending transactions up the chain.
+* Operator Account: Used to edit the information of the StorageProvider. Please make sure it have enough BNB to deposit the create storage provider proposal(1 BNB) and pay the gas fee of EditStorageProvider transaction.
+* Funding Account: Used to deposit staking tokens and receive earnings. It is important to ensure that there is enough money in this account, and the user must submit a deposit as a guarantee. At least 1000+ BNB are required for staking.
+* Seal Account: Used to seal the user's object. Please make sure it has enough BNB to pay the gas fee of SealObject transaction.
+* Approval Account: Used to approve user's requests. This account does not require holding BNB tokens.
+* GC Account: It is a special address for sp and is used by sp to clean up local expired or unwanted storage. Please make sure it has enough BNB tokens beacuse it's going to keep sending transactions up the chain.
 
 You can use the below command to generate this five accounts:
 
@@ -35,7 +35,7 @@ You can use the below command to generate this five accounts:
 ./build/bin/gnfd keys add gc --keyring-backend os
 ```
 
-and then export the private key to prepare for SP deployment
+and then export the private key to prepare for SP deployment:
 
 ```shell
 ./build/bin/gnfd keys export operator --unarmored-hex --unsafe  --keyring-backend os
@@ -45,6 +45,8 @@ and then export the private key to prepare for SP deployment
 ./build/bin/gnfd keys export gc --unarmored-hex --unsafe --keyring-backend os
 ```
 
+Please keep these five private keys safe!
+
 :::
 
 ## Create Storage Provider
@@ -53,9 +55,9 @@ and then export the private key to prepare for SP deployment
 
 [Compile SP doc](./compile-dependences.md#compile-sp).
 
-### 2. Configuration
+### 2. SP Testnet Config
 
-#### Make configuration template
+#### Generate config template
 
 ```shell
 cd greenfield-storage-provider/build
@@ -64,28 +66,28 @@ cd greenfield-storage-provider/build
 ./gnfd-sp config.dump
 ```
 
-#### Edit configuration
+#### Write config
 
 ```toml
 Server = []
 GRPCAddress = '0.0.0.0:9333'
 
 [SpDB]
-User = '' # writing to environment variables is recommended
-Passwd = '' # writing to environment variables is recommended
-Address = '' # writing to environment variables is recommended
+User = '${db_user}'
+Passwd = '${db_password}'
+Address = '${db_address}'
 Database = 'storage_provider_db'
 
 [BsDB]
-User = '' # writing to environment variables is recommended
-Passwd = '' # writing to environment variables is recommended
-Address = '' # writing to environment variables is recommended
+User = '${db_user}'
+Passwd = '${db_password}'
+Address = '${db_address}'
 Database = 'block_syncer'
 
 [BsDBBackup]
-User = '' # writing to environment variables is recommended
-Passwd = '' # writing to environment variables is recommended
-Address = '' # writing to environment variables is recommended
+User = '${db_user}'
+Passwd = '${db_password}'
+Address = '${db_address}'
 Database = 'block_syncer_backup'
 
 [PieceStore]
@@ -93,7 +95,7 @@ Shards = 0
 
 [PieceStore.Store]
 Storage = 's3'
-BucketURL = '' # writing to environment variables is recommended
+BucketURL = '${bucket_url}'
 MaxRetries = 5
 MinRetryDelay = 0
 TLSInsecureSkipVerify = false
@@ -105,11 +107,11 @@ ChainAddress = ['${chain_address}']
 
 [SpAccount]
 SpOperatorAddress = '${sp_operator_address}'
-OperatorPrivateKey = '' # writing to environment variables is recommended
-FundingPrivateKey = '' # writing to environment variables is recommended
-SealPrivateKey = '' # writing to environment variables is recommended
-ApprovalPrivateKey = '' # writing to environment variables is recommended
-GcPrivateKey = '' # writing to environment variables is recommended
+OperatorPrivateKey = '${operator_private_key}'
+FundingPrivateKey = '${funding_private_key}'
+SealPrivateKey = '${seal_private_key}'
+ApprovalPrivateKey = '${approval_private_key}'
+GcPrivateKey = '${gc_private_key}'
 
 [Endpoint]
 ApproverEndpoint = 'manager:9333'
@@ -120,16 +122,15 @@ MetadataEndpoint = 'metadata:9333'
 UploaderEndpoint = 'uploader:9333'
 P2PEndpoint = 'p2p:9333'
 SignerEndpoint = 'signer:9333'
-AuthorizerEndpoint = 'localhost:9333'
+AuthenticatorEndpoint = 'localhost:9333'
 
 [Gateway]
-Domain = '${sp_domain}'
+DomainName = '${sp_domain_name}'
 HTTPAddress = '0.0.0.0:9033'
 
 [P2P]
 # p2p node msg Secp256k1 encryption key, it is different from other SP's addresses
-# P2PPrivateKey and node_id is generated by ./gnfd-sp p2p.create.key -n 1
-P2PPrivateKey = '' # writing to environment variables is recommended
+P2PPrivateKey = '${p2p_private_key}'
 P2PAddress = '0.0.0.0:9933'
 P2PAntAddress = '${load_balance_doamin:port}'
 P2PBootstrap = ['node_id@load_balance_doamin:port'] # p2p node's bootstrap node, format: [node_id1@ip1:port1, node_id2@ip1:port2]
@@ -161,7 +162,34 @@ Workers = 50
 EnableDualDB = false
 ```
 
-### 3. Start
+:::info About SP Testnet Config
+
+`ChainID` of testnet is `greenfield_5600-1`.
+
+`ChainAddress` of testnet you can use `https://gnfd-testnet-fullnode-tendermint-us.bnbchain.org:443`. Moreover, you can run your own fullnode and use its address.
+
+`P2PPrivateKey` and `node_id` is generated by `./gnfd-sp p2p.create.key -n 1`.
+
+`P2PAntAddress` is your load balance address. If you don't have a load balance address, you should have a public IP and use it in `P2PAddress`.
+
+`P2PBootstrap` consists of [node_id1@ip1:port1, node_id2@ip1:port2], you can use P2PAntAddress or P2PAddress as `ip:port`.
+
+We recommend you writing `db User, db password, db address, bucketURL, OperatorPrivateKey, FundingPrivateKey, SealPrivateKey, ApprovalPrivateKey, GcPrivateKey and P2PPrivatekey` into environment variables for safety.
+
+:::
+
+### 3. Create Database
+
+You should create three databases: SpDB, BsDB and BsDBBackup, take MySQL as an example, other DB is the same:
+
+```shell
+# login in mysql and create database
+mysql> CREATE DATABASE storage_provider_db;
+mysql> CREATE DATABASE block_syncer;
+mysql> CREATE DATABASE block_syncer_backup;
+```
+
+### 4. Run SP
 
 ```shell
 # start sp
@@ -176,10 +204,10 @@ Before creating the storage provider, it is necessary to allow the module accoun
 
 ```shell
 ./build/bin/gnfd keys show operator --keyring-backend os 
-./build/bin/gnfd tx sp grant 0x7b5Fe22B5446f7C62Ea27B8BD71CeF94e03f3dF2 --spend-limit 100000000000000000000BNB --SPAddress {operatorAddress} --from {funding_address} --keyring-backend os --node https://gnfd-testnet-fullnode-tendermint-us.bnbchain.org:443 
+./build/bin/gnfd tx sp grant 0x7b5Fe22B5446f7C62Ea27B8BD71CeF94e03f3dF2 --spend-limit 100000000000000000000BNB --SPAddress {operator_address} --from {funding_address} --keyring-backend os --node https://gnfd-testnet-fullnode-tendermint-us.bnbchain.org:443 
 ```
 
-The above command requires the funding account of the SP to send the transaction to allow the gov module to have the permission to deduct tokens from the funding account of SP which specified by operator address
+The above command requires the funding account of the SP to send the transaction to allow the gov module to have the permission to deduct tokens from the funding account of SP which specified by operator address.
 
 ### 2. submit-proposal
 
@@ -236,7 +264,9 @@ Each proposal needs to have enough tokens deposited to enter the voting stage.
 
 After submitting the proposal successfully, you must wait for the voting to be completed and the proposal to be approved. It will last 7days on mainnet while 1 day on testnet. Once it has passed and is executed successfully, you can verify that the storage provider has been joined.
 
-::: note
+:::caution
+
+Default voting time is 30 seconds.
 
 Please ensure that the storage provider service is running before it has been joined.
 
@@ -254,7 +284,7 @@ Alternatively, you can check the proposal to know about its execution status.
 ./build/bin/gnfd query gov proposal {proposal_id} --node https://gnfd-testnet-fullnode-tendermint-us.bnbchain.org:443
 ```
 
-## Deposit
+### Deposit
 
 This command is used for the SP to supplement collateral, because if the service status of the SP is not good during operation, it will be slashed by users, resulting in the deduction of its deposit tokens.
 
@@ -262,10 +292,18 @@ This command is used for the SP to supplement collateral, because if the service
 gnfd tx sp deposit [sp-address] [value] [flags]
 ```
 
-## EditStorageProvider
+### EditStorageProvider
 
 This command is used to edit the information of the SP, including endpoint, description and .etc.
 
 ```shell
 gnfd tx sp edit-storage-provider [sp-address] [flags]
 ```
+
+## Operate with Greenfield Testnet
+
+Users can use Greenfield Cmd or DCellar to operate in Testnet:
+
+* Greenfield Cmd: [docs](../../getting-started/interact-with-greenfield.md), [repo](https://github.com/bnb-chain/greenfield-cmd)
+
+* DCellar: [website](https://dcellar.io/)
