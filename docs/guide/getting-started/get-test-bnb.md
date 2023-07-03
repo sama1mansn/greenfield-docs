@@ -7,10 +7,11 @@ order: 3
 
 You can claim the test BNB on BSC Testnet by the faucet, and bridge it to Greenfield Testnet.
 
-## Faucet
+# Claim tBNB from Faucet
 
-1. Visit [BNB-Chain discord](https://discord.com/invite/bnbchain) and join the `testnet-faucet` channel.
-2. Type `/faucet {your wallet address}` to get test BNB.
+1. There are two ways to claim testing tBNB token, please refer to the BSC [faucet doc](https://docs.bnbchain.org/docs/bsc-faucet).
+
+2. Switch to the BNB smart chain testnet in your wallet and check your balance. 
 
 ## Bridge to Greenfield
 
