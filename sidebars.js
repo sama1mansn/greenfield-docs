@@ -36,6 +36,7 @@ const sidebars = {
       items:[
         "guide/getting-started/overview",
         "guide/getting-started/wallet-onfiguration",
+        "guide/getting-started/network-faucets",
         "guide/getting-started/get-test-bnb",
         "guide/getting-started/interact-with-greenfield",
       ],
