@@ -97,7 +97,7 @@ const config = {
           },
           
           {
-            label: "Release",
+            label: "Releases",
             position:"left",
             to: "/docs/release-notes/releaseNotes"
           },
