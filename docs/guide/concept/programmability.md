@@ -51,6 +51,8 @@ potential of the Greenfield ecosystem. Developers are able to create and leverag
 wide range of innovative and decentralized applications while benefiting from Greenfield's robust 
 infrastructure and cross-chain capabilities.
 
+More details are discussed in [Mirroring FAQ](../../faq/mirroring-faqs.md).
+
 ## Cross-Chain Bridge
 The native cross-chain bridge is an essential part of the Greenfield ecosystem, 
 as it enables seamless interoperability between BSC and Greenfield. 

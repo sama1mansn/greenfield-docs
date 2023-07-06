@@ -14,7 +14,6 @@
 /** @type {import('@docusaurus/plugin-content-docs').SidebarsConfig} */
 const sidebars = {
 
-
   guideSidebar:[
     {
       type: "category",
@@ -234,11 +233,21 @@ const sidebars = {
     },
 
     {type: 'doc', id: 'api-sdk/events'},
-    {type:'doc', id:'api-sdk/sdk'}
+    {type: 'doc', id:'api-sdk/sdk'},
   ],
 
   faqSidebar:[
-    {type: 'doc', id: 'faq/greenfield-faqs'},
+    {
+      type:"category", 
+      label: "FAQs",
+      link: {type: 'doc', id: 'faq/greenfield-faqs'},
+      collapsible: true,
+      collapsed: true,
+      items:[
+        {type: 'doc', id: 'faq/general-faqs'},
+        {type: 'doc', id: 'faq/mirroring-faqs'},
+      ]
+    },
   ],
 
   releaseNotesSidebar:[
