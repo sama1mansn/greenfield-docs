@@ -97,8 +97,8 @@ const config = {
           },
           
           {
-            label: "Release",
-            position: "left",
+            label: "Releases",
+            position:"left",
             to: "/docs/release-notes/releaseNotes"
           },
          // {to: 'blog', label: 'Changelog', position: 'left'},

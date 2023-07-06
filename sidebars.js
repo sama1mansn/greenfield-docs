@@ -14,7 +14,6 @@
 /** @type {import('@docusaurus/plugin-content-docs').SidebarsConfig} */
 const sidebars = {
 
-
   guideSidebar:[
     {
       type: "category",
@@ -249,7 +248,17 @@ const sidebars = {
   ],
 
   faqSidebar:[
-    {type: 'doc', id: 'faq/greenfield-faqs'},
+    {
+      type:"category", 
+      label: "FAQs",
+      link: {type: 'doc', id: 'faq/greenfield-faqs'},
+      collapsible: true,
+      collapsed: true,
+      items:[
+        {type: 'doc', id: 'faq/general-faqs'},
+        {type: 'doc', id: 'faq/mirroring-faqs'},
+      ]
+    },
   ],
 
   releaseNotesSidebar:[
