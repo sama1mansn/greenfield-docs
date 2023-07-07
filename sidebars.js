@@ -233,7 +233,18 @@ const sidebars = {
     },
 
     {type: 'doc', id: 'api-sdk/events'},
-    {type: 'doc', id:'api-sdk/sdk'},
+    {
+      type: "category",
+      label: "SDKs",
+      link: {
+        type: 'doc',
+        id: 'api-sdk/sdks',
+      },
+      items:[
+        "api-sdk/sdk-go",
+        "api-sdk/sdk-js",
+      ]
+    },
   ],
 
   faqSidebar:[
