@@ -124,8 +124,6 @@ We can add the following code in`main.go`to query current head of the chain.
 	log.Printf("Current block height: %d", blockByHeight.GetHeader())
 ```
 
-
-
 #### 2. Get Address Balance
 
 With a given greenfield wallet address, you can query its balance by calling `GetAccountBalance` function.
@@ -212,9 +210,9 @@ Apart from the basic data queries shown above, there are many more features. Ple
 
 Greenfield wallets hold addresses that you can use to manage objects, sign transactions, and pay for gas fees. In this section, we will demonstrate different ways to manage your wallet.
 
-1. First, let’s make sure your connected node is running and the wallet address contains some testnet BNB.
-2. Create a new file called `account.go` in the same project as earlier. This is where we’ll write all out wallet-related code.
-3. In `account.go` import modules and initialize your private key or mnemonic phrase.
+* First, let’s make sure your connected node is running and the wallet address contains some testnet BNB.
+* Create a new file called `account.go` in the same project as earlier. This is where we’ll write all out wallet-related code.
+* In `account.go` import modules and initialize your private key or mnemonic phrase.
 
 ```go
 	//import mnemonic
@@ -296,7 +294,7 @@ tx:
 txhash: DFC2CE0514FE334B5BCB6BC3EBCCCD7A6E16B4CAEDC4FFDBE3F2FA3B6E548E61
 ```
 
-### Make a storage deal
+### Make A Storage Deal
 
 Storing data is one of the most important features of Greenfield. In this section, we’ll walk through the end-to-end process of storing your data on the Greenfield network. We’ll start by importing your data, then make a storage deal with a storage provider, and finally wait for the deal to complete.
 
@@ -304,11 +302,11 @@ Storing data is one of the most important features of Greenfield. In this sectio
 
 Create a `storage.go` file in yourdemoproject and add the following boilerplate code:
 
-```plain
+```go
 func main() {
 
-    // initialize account
-  	account, err := types.NewAccountFromPrivateKey("test", privateKey)
+  // initialize account
+  account, err := types.NewAccountFromPrivateKey("test", privateKey)
 	log.Println("address info:", account)
 
 	if err != nil {
@@ -324,16 +322,16 @@ func main() {
 
 	// 1. choose storage provider
 
-    // 2. Create a bucket
+  // 2. Create a bucket
 
-    // 3. Upload your data and set a quota
+  // 3. Upload your data and set a quota
 
 }
 ```
 
 
 
-#### 2. Choose your own SP
+#### 2. Choose SP
 
 You can query the list of SP.
 
@@ -347,7 +345,7 @@ You can query the list of SP.
 	primarySP := spLists[0].GetOperatorAddress()
 ```
 
-#### 3. Create your bucket
+#### 3. Create Buckets
 
 Bucket can be private or public. You can custmize it with options.
 
@@ -364,7 +362,7 @@ To understand how does `quota` work, read [this](https://docs.bnbchain.org/green
 
 
 
-#### 4. Upload your object
+#### 4. Upload Objects
 
 Objects can also be private or public.
 
@@ -376,28 +374,28 @@ Uploading objects is composed of two parts: `create` and `put`.
 
 ```go
 // create and put object
-txnHash, err := cli.CreateObject(ctx, bucketName, objectName, bytes.NewReader(buffer.Bytes()), types.CreateObjectOptions{})
+	txnHash, err := cli.CreateObject(ctx, bucketName, objectName, bytes.NewReader(buffer.Bytes()), types.CreateObjectOptions{})
 
-handleErr(err, "CreateObject")
+	handleErr(err, "CreateObject")
 
-// Put your object
-err = cli.PutObject(ctx, bucketName, objectName, int64(buffer.Len()),
+	// Put your object
+	err = cli.PutObject(ctx, bucketName, objectName, int64(buffer.Len()),
 		bytes.NewReader(buffer.Bytes()), types.PutObjectOptions{TxnHash: txnHash})
-handleErr(err, "PutObject")
+	handleErr(err, "PutObject")
 
-log.Printf("object: %s has been uploaded to SP\n", objectName)
+	log.Printf("object: %s has been uploaded to SP\n", objectName)
 
-//wait for SP to seal your object
-waitObjectSeal(cli, bucketName, objectName)
+	//wait for SP to seal your object
+	waitObjectSeal(cli, bucketName, objectName)
 ```
 
-The primary SP syncs with secondary SPs to set up the data redundancy, and then it signs a "`Seal`" transaction with the finalized metadata for storage. If the primary SP determines that it doesn't want to store the file due to whatever reason, it can also "SealReject" the request.
+The primary SP syncs with secondary SPs to set up the data redundancy, and then it signs a "`Seal`" transaction with the finalized metadata for storage. If the primary SP determines that it doesn't want to store the file due to whatever reason, it can also "`SealReject`" the request.
 
 
 
-### Object management
+### Object Management
 
-#### 1. Read object
+#### 1. Read Object
 
 You can call `GetObject` function to download data.
 
@@ -415,17 +413,17 @@ You can call `GetObject` function to download data.
 
 
 
-#### 2.Update object visibility
+#### 2. Update Object Visibility
 
 You can call `UpdateObjectVisibility` to change object visibility
 
 ```go
-		// update object visibility
-		updateBucketTx, err := ccli.UpdateBucketVisibility(s.ClientContext, bucketName,
-		storageTypes.VISIBILITY_TYPE_PRIVATE, types.UpdateVisibilityOption{})
+	// update object visibility
+	updateBucketTx, err := ccli.UpdateBucketVisibility(s.ClientContext, bucketName,
+	storageTypes.VISIBILITY_TYPE_PRIVATE, types.UpdateVisibilityOption{})
 ```
 
-#### 3.Delete object
+#### 3. Delete Object
 
 The function `DeleteObject` support deleting objects.
 
@@ -472,6 +470,8 @@ type Account interface {
 
 #### Type Basic
 
+Basic interface defines basic functions of greenfield client.
+
 ```go
 type Basic interface {
 	GetNodeInfo(ctx context.Context) (*p2p.DefaultNodeInfo, *tmservice.VersionInfo, error)
@@ -495,7 +495,6 @@ type Basic interface {
 }
 ```
 
-Basic interface defines basic functions of greenfield client.
 
 #### Type Bucket
 
@@ -577,12 +576,13 @@ type Client interface {
 
 #### Func New
 
+`New` function instantiate greenfield chain with chain info, account info and options.
+endpoint indicates the rpc address of greenfield
+
 ```go
 func New(chainID string, endpoint string, option Option) (Client, error)
 ```
 
-New - instantiate greenfield chain with chain info, account info and options.
-endpoint indicates the rpc address of greenfield
 
 #### Type CrossChain
 
@@ -722,6 +722,9 @@ type Object interface {
 
 #### Type Option
 
+Option is a configuration struct used to provide optional parameters to the
+client constructor.
+
 ```go
 type Option struct {
 	// GrpcDialOption is the list of gRPC dial options used to configure the connection to the blockchain node.
@@ -737,8 +740,6 @@ type Option struct {
 }
 ```
 
-Option is a configuration struct used to provide optional parameters to the
-client constructor.
 
 #### type Payment
 
