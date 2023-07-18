@@ -3,11 +3,11 @@ title: How to deploy Piece Store
 order: 5
 ---
 
-Greenfield SP is a storage infrastructure for Greenfield decentralized storgage platform. Greenfield SP use `PieceStore` to store users payload data.
+Greenfield SP is a storage infrastructure for Greenfield decentralized storgage platform. Greenfield SP uses `PieceStore` to store users' payload data.
 
 # PieceStore Config
 
-When creating a PieceStore, there are the following options to deploy underlying storage:
+When creating a PieceStore, there are the following options to configure underlying storage:
 
 ```toml
 [PieceStore]
@@ -35,9 +35,9 @@ When creating a PieceStore, multiple buckets can be defined as the underlying st
 
 The following are points to note when using the data sharding function:
 
-- The `Shards`` option accepts an integer between 0 and 256, indicating how many Buckets the files will be scattered into. The default value is 0, indicating that the data sharding function is not enabled.
+- The `Shards` option accepts an integer between 0 and 256, indicating how many Buckets the files will be scattered into. The default value is 0, indicating that the data sharding function is not enabled.
 - Only multiple buckets under the same object storage can be used.
-- The integer wildcard %d needs to be used to specify the buckets, for example, `http://10.180.42.161:9000%d`. Buckets can be created automatically by SP when creating PieceStore.
+- The integer wildcard `%d` needs to be used to specify the buckets, for example, `http://10.180.42.161:9000%d`. Buckets can be created automatically by SP when creating PieceStore.
 - The data sharding is set at the time of creation and cannot be modified after creation. You cannot increase or decrease the number of buckets, nor cancel the shards function.
 
 For example, the following config creates PieceStore with 5 shards.
@@ -52,7 +52,7 @@ BucketURL = 'http://10.180.42.161:9000/mybucket%d'
 IAMType = 'AKSK'
 ```
 
-After SP is initializing through the above command, PieceStore will create 5 buckets named `mybucket0`, `mybucket1`, `mybucket2`, `mybucket3` and `mybucket4`.
+After SP initialized through the above command, PieceStore will create 5 buckets named `mybucket0`, `mybucket1`, `mybucket2`, `mybucket3` and `mybucket4`.
 
 ## IAMType
 
@@ -60,7 +60,7 @@ PieceStore supports two authentication modes: `AKSK` and `SA`.
 
 ### AKSK
 
-In `AKSK` mode, PieceStore will access object storage by using `AccessKeyID` and `AccessKeySecret`. If users s3 as object storage, you can set `AWSAccessKey` and `AWS_SECRET_KEY` into environment variables which are more secure.
+In `AKSK` mode, PieceStore will access object storage by using `AccessKeyID` and `AccessKeySecret`. If users use s3 as object storage, you can set `AWSAccessKey` and `AWS_SECRET_KEY` into environment variables which are more secure.
 
 Permanent access credentials generally have two parts, Access Key, Secret Key, while temporary access credentials generally include three parts, Access Key, Secret Key and token, and temporary access credentials have an expiration time, usually between a few minutes and a few hours.
 
@@ -76,7 +76,7 @@ Temporary credentials are also set into environment variables such as s3 by `AWS
 
 ## Supported Storage Type
 
-PieceStore now supports the following storage system. If the listed storage systems don't conatin you want to use, feel free to submit a requirement [issue](https://github.com/bnb-chain/greenfield-storage-provider/issues).
+PieceStore now supports the following storage system. If the listed storage systems don't conatin that you want to use, feel free to submit a requirement [issue](https://github.com/bnb-chain/greenfield-storage-provider/issues).
 
 | Name                                    | value      |
 | --------------------------------------- | ---------- |
