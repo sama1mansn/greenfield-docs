@@ -54,7 +54,7 @@ Dsn = [BsDB_User]:[BsDB_Passwd]@tcp([BsDB_Address])/[BsDB_Database?parseTime=tru
 
 ### Description
 
-after uploading a file, you see an error message:
+After uploading a file, you see an error message:
 ```
 Message: object has not been sealed state
 ```
