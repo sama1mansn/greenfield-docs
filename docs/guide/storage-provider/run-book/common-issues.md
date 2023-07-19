@@ -124,7 +124,7 @@ This is a Minio authentication
 Set Minio authentication tokens/keys as global variable
 
 ```
-// MinioRegion defines env variable name for minio region
+    // MinioRegion defines env variable name for minio region
 	MinioRegion = "MINIO_REGION"
 	// MinioAccessKey defines env variable name for minio access key
 	MinioAccessKey = "MINIO_ACCESS_KEY"
@@ -139,3 +139,4 @@ Set Minio authentication tokens/keys as global variable
 	MinioSecretKey = "MINIO_SECRET_KEY"
 	// MinioSessionToken defines env variable name for minio session token
 	MinioSessionToken = "MINIO_SESSION_TOKEN"
+```
