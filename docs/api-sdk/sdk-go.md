@@ -14,15 +14,16 @@ This guide provides configuration information, sample code, and an introduction 
 ## Install
 
 
-The Greenfield SDK for Go requires Go 1.19 or later.You can view your current version of Go by running the go version command. For information about installing or upgrading your version of Go, see https://golang.org/doc/install.
+The Greenfield SDK for Go requires [Go 1.19 or later](https://go.dev/).You can view your current version of Go by running the go version command. For information about installing or upgrading your version of Go, see https://golang.org/doc/install.
 
 To install the SDK and its dependencies, run the following Go command.
 
-```
+```bash
+# Get latest
 $ go get github.com/bnb-chain/greenfield-go-sdk
 ```
 
-Edit go.mod to replace dependencies
+Edit `go.mod` to replace dependencies
 
 ```
 replace (
@@ -40,7 +41,7 @@ Now we’re ready to connect to Greenfield testnet and interact with the Greenfi
 
 ### Create client
 
-Create a `main.go `file in your project and add the following code.
+Create a `main.go` file in your project and add the following code.
 
 ```go
 package main
@@ -60,20 +61,27 @@ const (
 )
 
 func main() {
+	// import acccount
 	account, err := types.NewAccountFromPrivateKey("test", privateKey)
 	if err != nil {
 		log.Fatalf("New account from private key error, %v", err)
 	}
+
+	// create client
 	cli, err := client.New(chainId, rpcAddr, client.Option{DefaultAccount: account})
 	if err != nil {
 		log.Fatalf("unable to new greenfield client, %v", err)
 	}
 	ctx := context.Background()
+
+	// get node info from RPC
 	nodeInfo, versionInfo, err := cli.GetNodeInfo(ctx)
 	if err != nil {
 		log.Fatalf("unable to get node info, %v", err)
 	}
 	log.Printf("nodeInfo moniker: %s, go version: %s", nodeInfo.Moniker, versionInfo.GoVersion)
+
+	// query latest block height
 	height, err := cli.GetLatestBlockHeight(ctx)
 	if err != nil {
 		log.Fatalf("unable to get latest block height, %v", err)
@@ -84,43 +92,44 @@ func main() {
 ```
 
 Run the following command in your project directory:
-```
+
+```bash
 go run main.go
 ```
 
 This will output something like:
+
 ```
 2023/06/22 10:44:16 nodeInfo moniker: validator-a, go version: go version go1.20.4 linux/amd64
 2023/06/22 10:44:16 Current block height: 817082
 ```
+
 If everything is set up correctly, your code will be able to connect to the Greenfield node and return the chain data as shown above.
 
 ### Queries
 
-#### Get Chain Data
 
+In the previous step, we created a `main.go` file to demonstrate the basic steps to connect to the node and initialize a `Client` to query chain data. Next, let’s use some more functions.
 
-In the previous step, we created a`main.go`file to demonstrate the basic steps to connect to the node and initialize a`Client`to query chain data. Next, let’s use some more functions.
-
-* Get current chain head:
+#### 1. Get Current Chain Head
 
 We can add the following code in`main.go`to query current head of the chain.
 
 ```go
-    blockByHeight, err := cli.GetBlockByHeight(ctx,height)
+  // query latest block height
+  blockByHeight, err := cli.GetBlockByHeight(ctx,height)
 	if err != nil {
 		log.Fatalf("unable to get block by height, %v", err)
 	}
 	log.Printf("Current block height: %d", blockByHeight.GetHeader())
 ```
 
-
-
-* Get Address balance
+#### 2. Get Address Balance
 
 With a given greenfield wallet address, you can query its balance by calling `GetAccountBalance` function.
 
 ```go
+	// query current balance
 	balance, err := cli.GetAccountBalance(ctx, account.GetAddress().String())
 	if err != nil {
 		log.Fatalf("unable to get balance, %v", err)
@@ -128,12 +137,11 @@ With a given greenfield wallet address, you can query its balance by calling `Ge
 	log.Printf("%s Current balance: %s", account.GetAddress().String(), balance.String())
 ```
 
-#### Query Storage Providers
+#### 3. Query Storage Providers
 
 
 In addition, the SDK provides support for querying the list of storage providers available and offers generic search capabilities for exploring metadata attributes.
 
-* List Storage Providers
 
 ```go
 	cli, err := client.New(chainId, rpcAddr, client.Option{DefaultAccount: account})
@@ -147,22 +155,16 @@ In addition, the SDK provides support for querying the list of storage providers
 	if err != nil {
 		log.Fatalf("fail to list in service sps")
 	}
-	// choose the first sp to be the primary SP
-	primarySP := spLists[0].GetOperatorAddress()
-
-	price, err := GetStoragePrice(ctx,primarySP)
-	if err != nil {
-		log.Fatalf("fail to list in service sps")
-	}
 
 ```
 
-* Query Storage Price
+#### 4. Query Storage Price
 
 ```go
-// choose the first sp to be the primary SP
+	// choose the first sp to be the primary SP
 	primarySP := spLists[0].GetOperatorAddress()
 
+	// query price for storing data
 	price, err := cli.GetStoragePrice(ctx,primarySP)
 	if err != nil {
 		log.Fatalf("fail to list in service sps")
@@ -172,21 +174,23 @@ In addition, the SDK provides support for querying the list of storage providers
 
 ```
 
-#### Query buckets and objects
+#### 5. Query Buckets
 
 You can query the bucket info like this:
 
 ```go
-// head bucket
+	// head bucket
 	bucketInfo, err := cli.HeadBucket(ctx, bucketName)
 	handleErr(err, "HeadBucket")
 	log.Println("bucket info:", bucketInfo.String())
 ```
 
+#### 5. Query Objects
+
 List all the objects under the same bucket
 
 ```go
-    // list object
+  // list object
 	objects, err := cli.ListObjects(ctx, bucketName, types.ListObjectsOptions{true, "", "", "/", "", 10})
 	log.Println("list objects result:")
 	for _, obj := range objects.Objects {
@@ -202,47 +206,51 @@ Apart from the basic data queries shown above, there are many more features. Ple
 
 ### Transactions
 
-#### Manage Wallet
+#### 1. Manage Wallet
 
 Greenfield wallets hold addresses that you can use to manage objects, sign transactions, and pay for gas fees. In this section, we will demonstrate different ways to manage your wallet.
 
-1. First, let’s make sure your connected node is running and the wallet address contains some testnet BNB.
-2. Create a new file called `account.go` in the same project as earlier. This is where we’ll write all out wallet-related code.
-3. In `account.go` import modules and initialize your private key or mnemonic phrase.
+* First, let’s make sure your connected node is running and the wallet address contains some testnet BNB.
+* Create a new file called `account.go` in the same project as earlier. This is where we’ll write all out wallet-related code.
+* In `account.go` import modules and initialize your private key or mnemonic phrase.
 
 ```go
-//import mnemonic
-account, err := types.NewAccountFromMnemonic("test", mnemonic)
-//import private key
-account, err := types.NewAccountFromPrivateKey("test", privateKey)
+	//import mnemonic
+	account, err := types.NewAccountFromMnemonic("test", mnemonic)
+	//import private key
+	account, err := types.NewAccountFromPrivateKey("test", privateKey)
 ```
 
 Let’s create a second wallet address so we can test transfers. The new address will be created locally and start with 0 token balance:
 
 ```go
-account2, _, err := types.NewAccount("test2")
+	//create a differet account
+	account2, _, err := types.NewAccount("test2")
 ```
 
 Now, let’s try to transfer tBNB to this new address. Under the hood, this will create a transaction to transfer tBNB from`fromAddress`to`toAddress`, sign the transaction using SDK, and send the signed transaction to the Greenfield node.
 
 ```go
-transferTxHash, err := cli.Transfer(ctx, account2.GetAddress().String(), math.NewIntFromUint64(1000000000000000000), types2.TxOption{})
+	// transfer token to acccount2
+	transferTxHash, err := cli.Transfer(ctx, account2.GetAddress().String(), math.NewIntFromUint64(1000000000000000000), types2.TxOption{})
 	if err != nil {
 		log.Fatalf("unable to send, %v", err)
 	}
 	log.Printf("Transfer response: %s", transferTxHash)
 
+	// wait for transaction hash
 	waitForTx, err := cli.WaitForTx(ctx, transferTxHash)
 
 	log.Printf("Wair for tx: %s", waitForTx.String())
 
+	//verify account2's balance
 	balance, err = cli.GetAccountBalance(ctx, account2.GetAddress().String())
 ```
 
 Run the code to test the transfer of tBNB:
 
 ```go
-go run account.go
+	go run account.go
 ```
 
 This will output something like:
@@ -286,19 +294,19 @@ tx:
 txhash: DFC2CE0514FE334B5BCB6BC3EBCCCD7A6E16B4CAEDC4FFDBE3F2FA3B6E548E61
 ```
 
-#### Make a storage deal
+### Make A Storage Deal
 
 Storing data is one of the most important features of Greenfield. In this section, we’ll walk through the end-to-end process of storing your data on the Greenfield network. We’ll start by importing your data, then make a storage deal with a storage provider, and finally wait for the deal to complete.
 
+#### 1. Create a `storage.go` file
 
+Create a `storage.go` file in yourdemoproject and add the following boilerplate code:
 
-1. Create a`storage.go`file in yourdemoproject and add the following boilerplate code:
-
-```plain
+```go
 func main() {
 
-    // initialize account
-  	account, err := types.NewAccountFromPrivateKey("test", privateKey)
+  // initialize account
+  account, err := types.NewAccountFromPrivateKey("test", privateKey)
 	log.Println("address info:", account)
 
 	if err != nil {
@@ -314,21 +322,21 @@ func main() {
 
 	// 1. choose storage provider
 
-    // 2. Create a bucket
+  // 2. Create a bucket
 
-    // 3. Upload your data and set a quota
+  // 3. Upload your data and set a quota
 
 }
 ```
 
 
 
-2. Choose your own SP
+#### 2. Choose SP
 
 You can query the list of SP.
 
 ```go
-// get storage providers list
+	// get storage providers list
 	spLists, err := cli.ListStorageProviders(ctx, true)
 	if err != nil {
 		log.Fatalf("fail to list in service sps")
@@ -337,7 +345,7 @@ You can query the list of SP.
 	primarySP := spLists[0].GetOperatorAddress()
 ```
 
-3. Create your bucket
+#### 3. Create Buckets
 
 Bucket can be private or public. You can customize it with options.
 
@@ -345,16 +353,16 @@ Bucket can be private or public. You can customize it with options.
 *   VISIBILITY\_TYPE\_PRIVATE
 
 ```go
-chargedQuota := uint64(100)
-visibility := storageTypes.VISIBILITY_TYPE_PUBLIC_READ
-opts := types.CreateBucketOptions{Visibility: visibility, ChargedQuota: chargedQuota}
+	chargedQuota := uint64(100)
+	visibility := storageTypes.VISIBILITY_TYPE_PUBLIC_READ
+	opts := types.CreateBucketOptions{Visibility: visibility, ChargedQuota: chargedQuota}
 ```
 
 To understand how does `quota` work, read [this](https://docs.bnbchain.org/greenfield-docs/docs/guide/concept/billing-payment#storage-service-fee).
 
 
 
-4. Upload your object
+#### 4. Upload Objects
 
 Objects can also be private or public.
 
@@ -366,31 +374,33 @@ Uploading objects is composed of two parts: `create` and `put`.
 
 ```go
 // create and put object
-txnHash, err := cli.CreateObject(ctx, bucketName, objectName, bytes.NewReader(buffer.Bytes()), types.CreateObjectOptions{})
+	txnHash, err := cli.CreateObject(ctx, bucketName, objectName, bytes.NewReader(buffer.Bytes()), types.CreateObjectOptions{})
 
-handleErr(err, "CreateObject")
+	handleErr(err, "CreateObject")
 
-err = cli.PutObject(ctx, bucketName, objectName, int64(buffer.Len()),
+	// Put your object
+	err = cli.PutObject(ctx, bucketName, objectName, int64(buffer.Len()),
 		bytes.NewReader(buffer.Bytes()), types.PutObjectOptions{TxnHash: txnHash})
-handleErr(err, "PutObject")
+	handleErr(err, "PutObject")
 
-log.Printf("object: %s has been uploaded to SP\n", objectName)
+	log.Printf("object: %s has been uploaded to SP\n", objectName)
 
-waitObjectSeal(cli, bucketName, objectName)
+	//wait for SP to seal your object
+	waitObjectSeal(cli, bucketName, objectName)
 ```
 
-The primary SP syncs with secondary SPs to set up the data redundancy, and then it signs a "`Seal`" transaction with the finalized metadata for storage. If the primary SP determines that it doesn't want to store the file due to whatever reason, it can also "SealReject" the request.
+The primary SP syncs with secondary SPs to set up the data redundancy, and then it signs a "`Seal`" transaction with the finalized metadata for storage. If the primary SP determines that it doesn't want to store the file due to whatever reason, it can also "`SealReject`" the request.
 
 
 
-5. Object management
+### Object Management
 
-* Read object
+#### 1. Read Object
 
 You can call `GetObject` function to download data.
 
 ```go
-// get object
+	// get object
 	reader, info, err := cli.GetObject(ctx, bucketName, objectName, types.GetObjectOption{})
 	handleErr(err, "GetObject")
 	log.Printf("get object %s successfully, size %d \n", info.ObjectName, info.Size)
@@ -403,27 +413,22 @@ You can call `GetObject` function to download data.
 
 
 
-* Update object visibility
-
-You can call `UpdateBucketVisibility` to change bucket visibility
+#### 2. Update Object Visibility
 
 You can call `UpdateObjectVisibility` to change object visibility
 
 ```go
-updateBucketTx, err := ccli.UpdateBucketVisibility(s.ClientContext, bucketName,
-		storageTypes.VISIBILITY_TYPE_PRIVATE, types.UpdateVisibilityOption{})
-
-
+	// update object visibility
+	updateBucketTx, err := ccli.UpdateBucketVisibility(s.ClientContext, bucketName,
+	storageTypes.VISIBILITY_TYPE_PRIVATE, types.UpdateVisibilityOption{})
 ```
 
-
-
-* Delete object
+#### 3. Delete Object
 
 The function `DeleteObject` support deleting objects.
 
 ```go
-// delete object
+	// delete object
 	delTx, err := cli.DeleteObject(ctx, bucketName, objectName, types.DeleteObjectOption{})
 	handleErr(err, "DeleteObject")
 	_, err = cli.WaitForTx(ctx, delTx)
@@ -433,15 +438,19 @@ The function `DeleteObject` support deleting objects.
 	log.Printf("object: %s has been deleted\n", objectName)
 ```
 
-## Greenfield client
---
+## Greenfield Client Documentation
+
+## Usage
+
+```
     import "github.com/bnb-chain/greenfield-go-sdk/client"
+```
 
 Package client provides a client for interact with greenfield storage network.
 
 ### Usage
 
-#### type Account
+#### Type Account
 
 ```go
 type Account interface {
@@ -459,7 +468,9 @@ type Account interface {
 ```
 
 
-#### type Basic
+#### Type Basic
+
+Basic interface defines basic functions of greenfield client.
 
 ```go
 type Basic interface {
@@ -484,9 +495,8 @@ type Basic interface {
 }
 ```
 
-Basic interface defines basic functions of greenfield client.
 
-#### type Bucket
+#### Type Bucket
 
 ```go
 type Bucket interface {
@@ -523,7 +533,7 @@ type Bucket interface {
 ```
 
 
-#### type Challenge
+#### Type Challenge
 
 ```go
 type Challenge interface {
@@ -539,7 +549,7 @@ type Challenge interface {
 ```
 
 
-#### type Client
+#### Type Client
 
 ```go
 type Client interface {
@@ -564,15 +574,17 @@ type Client interface {
 ```
 
 
-#### func  New
+#### Func New
+
+`New` function instantiate greenfield chain with chain info, account info and options.
+endpoint indicates the rpc address of greenfield
 
 ```go
 func New(chainID string, endpoint string, option Option) (Client, error)
 ```
-New - instantiate greenfield chain with chain info, account info and options.
-endpoint indicates the rpc address of greenfield
 
-#### type CrossChain
+
+#### Type CrossChain
 
 ```go
 type CrossChain interface {
@@ -591,7 +603,7 @@ type CrossChain interface {
 ```
 
 
-#### type Distribution
+#### Type Distribution
 
 ```go
 type Distribution interface {
@@ -603,7 +615,7 @@ type Distribution interface {
 ```
 
 
-#### type FeeGrant
+#### Type FeeGrant
 
 ```go
 type FeeGrant interface {
@@ -620,7 +632,7 @@ type FeeGrant interface {
 ```
 
 
-#### type Group
+#### Type Group
 
 ```go
 type Group interface {
@@ -660,7 +672,7 @@ type Group interface {
 ```
 
 
-#### type Object
+#### Type Object
 
 ```go
 type Object interface {
@@ -708,7 +720,10 @@ type Object interface {
 ```
 
 
-#### type Option
+#### Type Option
+
+Option is a configuration struct used to provide optional parameters to the
+client constructor.
 
 ```go
 type Option struct {
@@ -725,8 +740,6 @@ type Option struct {
 }
 ```
 
-Option is a configuration struct used to provide optional parameters to the
-client constructor.
 
 #### type Payment
 
@@ -741,7 +754,7 @@ type Payment interface {
 ```
 
 
-#### type Proposal
+#### Type Proposal
 
 ```go
 type Proposal interface {
@@ -752,7 +765,7 @@ type Proposal interface {
 ```
 
 
-#### type SP
+#### Type SP
 
 ```go
 type SP interface {
@@ -775,7 +788,7 @@ type SP interface {
 ```
 
 
-#### type Validator
+#### Type Validator
 
 ```go
 type Validator interface {
