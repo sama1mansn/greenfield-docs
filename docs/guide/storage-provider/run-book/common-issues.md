@@ -18,7 +18,15 @@ If your proposal received less than 2/3 of `yes` votes from validators, your pro
 
 ### 3. Why is Proposal Failed
 
-The proposal initiator should be the funding address, and it should have balance of **1k BNB** as deposit.
+To query the failed reason, run the following command:
+```
+./gnfd q gov proposal <proposal-id> --node https://gnfd-testnet-fullnode-tendermint-ap.bnbchain.org:443
+```
+If you see the following message: 
+```
+failed_reason: 'spendable balance 999009992000000000000BNB is smaller than 1000000000000000000000BNB:
+```
+It means the proposal initiator should be the funding address, and it should have balance of **1k BNB** as deposit.
 
 ## SP node issues
 
@@ -194,7 +202,7 @@ Add these headers
 Access-Control-Allow-Credentials:
 true
 Access-Control-Allow-Headers:
-DNT,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range,Authorization,X-Gnfd-Unsigned-Msg,X-Gnfd-Txn-Hash,Date,X-Gnfd-Object-ID,X-Gnfd-Piece-Index,X-Gnfd-Redundancy-Index,Address,X-Gnfd-User-Address,X-Gnfd-App-Domain,X-Gnfd-App-Reg-Nonce,X-Gnfd-App-Reg-Public-Key,X-Gnfd-App-Reg-Expiry-Date
+DNT,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range,Authorization,X-Gnfd-Unsigned-Msg,X-Gnfd-Txn-Hash,Date,X-Gnfd-Object-ID,X-Gnfd-Piece-Index,X-Gnfd-Redundancy-Index,Address,X-Gnfd-User-Address,X-Gnfd-App-Domain,X-Gnfd-App-Reg-Nonce,X-Gnfd-App-Reg-Public-Key,X-Gnfd-Expiry-Timestamp
 Access-Control-Allow-Methods:
 GET, PUT, POST, DELETE, PATCH, OPTIONS
 Access-Control-Allow-Origin:

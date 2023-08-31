@@ -53,24 +53,6 @@ MaxIdleConns = 0
 # optional
 MaxOpenConns = 0
 
-[BsDBBackup]
-# required
-User = ''
-# required
-Passwd = ''
-# required
-Address = ''
-# required
-Database = ''
-# optional
-ConnMaxLifetime = 0
-# optional
-ConnMaxIdleTime = 0
-# optional
-MaxIdleConns = 0
-# optional
-MaxOpenConns = 0
-
 [PieceStore]
 # required
 Shards = 0
@@ -120,8 +102,6 @@ CompleteMigrateBucketFeeAmount = 0
 SpOperatorAddress = ''
 # required
 OperatorPrivateKey = ''
-# required
-FundingPrivateKey = ''
 # required
 SealPrivateKey = ''
 # required
@@ -192,13 +172,13 @@ ListenSealRetryTimeout = 0
 MaxListenSealRetry = 0
 
 [P2P]
-# required
+# optional
 P2PPrivateKey = ''
-# required
+# optional
 P2PAddress = ''
-# required
+# optional
 P2PAntAddress = ''
-# required
+# optional
 P2PBootstrap = []
 # optional
 P2PPingPeriod = 0
@@ -324,14 +304,10 @@ BsDBSwitchCheckIntervalSec = 0
 [BlockSyncer]
 # required
 Modules = []
-# required
-Dsn = ''
 # optional
-DsnSwitched = ''
+BsDBWriteAddress = ''
 # required
 Workers = 0
-# optional
-EnableDualDB = false
 
 [APIRateLimiter]
 # optional
@@ -369,8 +345,7 @@ GRPCAddress = '0.0.0.0:9333'
 ```
 ## Database
 
-To config `[SpDB]`, `[BsDB]` and `[BsDBBackup]`, you have to input the `user name`, `db password' and
-`db address' in these fields.
+To config `[SpDB]`, `[BsDB]`, you have to input the `user name`, `db password`,`db address`  and  `db name` in these fields.
 
 ## PieceStore
 
@@ -431,11 +406,10 @@ DomainName = 'region.sp-name.com'
 The correct configuration should not include the protocol prefix `https://`.
 
 ## BlockSyncer
-Here is how you put `Dsn` config for `[BlockSyncer]`
+Here is block_syncer config.
+The configuration of BsDBWriteAddress can be the same as the BSDB.Address module here. To enhance performance, you can set up the write database address here and the corresponding read database address in BSDB.
 ```
 Modules = ['epoch','bucket','object','payment','group','permission','storage_provider','prefix_tree', 'virtual_group','sp_exit_events','object_id_map']
-Dsn = "user:passwd*@tcp(localhost:3306)/block_syncer?parseTime=true&multiStatements=true&loc=Local&interpolateParams=true"
-DsnSwitched = ''
+BsDBWriteAddress = 'localhost:3306'
 Workers = 50
-EnableDualDB = false
 ```
