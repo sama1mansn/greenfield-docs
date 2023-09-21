@@ -101,16 +101,19 @@ bls_proof:
 
 ### Database Configuration
 
-You should create three databases: SpDB, BsDB and BsDBBackup, take MySQL as an example, other DB is the same:
+You should create two databases: `${SpDB.Database}` and `${BsDB.Database}`. Both values can be found in [configuration file](../../../guide/storage-provider/run-book/config.md).
 
-block_syncer and block_syncer_backup require the **utf8mb4_unicode_ci encoding** format
+:::danger IMPORTANT
+`${BsDB.Database}` requires the **utf8mb4_unicode_ci** as the character set and collation.
+:::
+
+The following example assumes `${SpDB.Database}` as `storage_provider_db` and `${BsDB.Database}` as `block_syncer`. 
 
 ```shell
 # login in mysql and create database
 # the default encoding for the database should be utf8mb4_unicode_ci
 mysql> CREATE DATABASE storage_provider_db;
 mysql> CREATE DATABASE block_syncer;
-mysql> CREATE DATABASE block_syncer_backup;
 # check the database encoding format
 mysql> show create database block_syncer;
 ```
