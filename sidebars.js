@@ -92,10 +92,10 @@ const sidebars = {
           items:[
             "guide/greenfield-blockchain/run-node/interact-node",
             "guide/greenfield-blockchain/run-node/run-local-network",
-            "guide/greenfield-blockchain/run-node/run-mainnet-node",
-            "guide/greenfield-blockchain/run-node/run-testnet-node",
-            "guide/greenfield-blockchain/run-node/run-testnet-relayer-and-challenger",
-            "guide/greenfield-blockchain/run-node/become-testnet-validator",
+            "guide/greenfield-blockchain/run-node/run-node",
+            "guide/greenfield-blockchain/run-node/run-relayer",
+            "guide/greenfield-blockchain/run-node/run-challenger",
+            "guide/greenfield-blockchain/run-node/become-validator",
           ]
         }
       ],
@@ -150,8 +150,8 @@ const sidebars = {
           items:[
             "guide/storage-provider/run-book/compile-dependences",
             "guide/storage-provider/run-book/run-local-SP-network",
-            "guide/storage-provider/run-book/run-testnet-SP-node",
-            "guide/storage-provider/run-book/run-mainnet-SP-node",
+            "guide/storage-provider/run-book/run-SP-node",
+            "guide/storage-provider/run-book/join-SP-network",
             "guide/storage-provider/run-book/piece-store",
             "guide/storage-provider/run-book/config",
             "guide/storage-provider/run-book/common-issues"
@@ -244,7 +244,17 @@ const sidebars = {
       },
       items:[
         "sdks/sdk-go",
-        "sdks/sdk-js"
+        "sdks/sdk-js",
+         {
+          type: 'link',
+          label: 'Go SDK Official Doc', // The link label
+          href: 'https://pkg.go.dev/github.com/bnb-chain/greenfield-go-sdk/',
+        },
+        {
+          type: 'link',
+          label: 'JS SDK Official Doc', // The link label
+          href: 'https://docs.bnbchain.org/greenfield-js-sdk/',
+        },
       ],
     },
   ],
