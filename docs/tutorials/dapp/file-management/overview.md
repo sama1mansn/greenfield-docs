@@ -1,9 +1,9 @@
 ---
-title: Basic File Management
-order: 1
+title: Simple Tool for File Management
+order: 2
 ---
 
-# Building with Greenfield SDK
+# Building File Management Tool with Greenfield SDK
 
 Several Chain API libraries are available. These libraries manage the low-level logic of connecting to Greenfield node, making requests, and handing the responses.
 * [go-sdk](https://github.com/bnb-chain/greenfield-go-sdk)
@@ -397,3 +397,7 @@ The function DeleteObject support deleting objects.
 
 ## Conclusion
 Congratulations on making it all the way through this tutorial! In this tutorial, we learned the basics of interacting with the Greenfield network using SDK library.
+
+### Source Code
+* [Go-SDK](https://github.com/bnb-chain/greenfield-go-sdk/blob/master/examples/storage.go)
+* [JS-SDK](https://github.com/bnb-chain/greenfield-js-sdk/blob/main/examples/nodejs/storage.js)
