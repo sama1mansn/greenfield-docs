@@ -148,6 +148,36 @@ The flow chart is shown below:
 - TaskExecutor send requests to Metadata to query deleted objects in order.
 - TaskExecutor delete payload data which is stored in PieceStore.
 
+## GC ZombiePiece
+
+GC ZombiePiece is an abstract interface to record the information for collecting the piece store space by deleting zombie pieces data that dues to any exception, the piece data meta is not on chain but the pieces have been stored in piece store, or the piece should not be stored on the correct SP node. This function is automatically executed in Manager daemon mode.
+
+The flow chart is shown below:
+
+![gc-zombie-flow](../../../../static/asset/13-gc-zombie.png)
+
+<div style={{textAlign:'center'}}><i>GC ZombiePiece</i></div>
+
+- Manager dispatches GCZombiePieceTask to TaskExecutor.
+- TaskExecutor send requests to SPDB to query integrity meta in order.
+- TaskExecutor determines whether a piece is a ZombiePiece based on the IntegrityMeta table. Scans all IntegrityMeta within the current object ID range specified in GCZombiePieceTask (StartObjectId, EndObjectId).
+- TaskExecutor determines whether a piece is a ZombiePiece based on the PieceHash table. Scans all PieceHash within the current object ID range specified in GCZombiePieceTask (StartObjectId, EndObjectId).
+- TaskExecutor delete payload data which is stored in PieceStore.
+
+## GC Meta
+
+GCMetaTask is an abstract interface to record the information for collecting the SP meta store space by deleting the expired data. This function is automatically executed in Manager daemon mode.
+
+The flow chart is shown below:
+
+![gc-meta-flow](../../../../static/asset/13-gc-meta.png)
+
+<div style={{textAlign:'center'}}><i>GC Meta</i></div>
+
+- Manager dispatches GCMetaTask to TaskExecutor, triggered by gcMetaTicker.
+- TaskExecutor send requests to SPDB to delete entries from BucketTraffic using SpDBImpl::DeleteAllBucketTrafficExpired for expired BucketTrafficTable.
+- TaskExecutor send requests to SPDB to delete entries from ReadRecord using SpDBImpl::DeleteAllReadRecordExpired for expired ReadRecord table.
+
 ## Migrate Bucket
 
 Bucket user can select primary sp freely and use the migration bucket to migrate the sp service when they feel that the SP service quality is poor.
