@@ -470,7 +470,7 @@ The correct configuration should not include the protocol prefix `https://`.
 Here is block_syncer config. The configuration of BsDBWriteAddress can be the same as the BSDB.Address module here. To enhance performance, you can set up the write database address here and the corresponding read database address in BSDB.
 
 ```toml
-Modules = ['epoch','bucket','object','payment','group','permission','storage_provider','prefix_tree', 'virtual_group','sp_exit_events','object_id_map']
+Modules = ['epoch','bucket','object','payment','group','permission','storage_provider','prefix_tree', 'virtual_group','sp_exit_events','object_id_map','general']
 Workers = 50
 BsDBWriteAddress = 'localhost:3306'
 ```
@@ -694,33 +694,98 @@ ConnsOutbound = 2147483647
 
 [BlockSyncer]
 # required
-Modules = ['epoch','bucket','object','payment','group','permission','storage_provider','prefix_tree','virtual_group','sp_exit_events','object_id_map']
+Modules = ['epoch','bucket','object','payment','group','permission','storage_provider','prefix_tree','virtual_group','sp_exit_events','object_id_map','general']
 # required
 Workers = 50
 # optional
 BsDBWriteAddress = "{your_db_address}"
 
 [APIRateLimiter]
+# every line should represent one entry of gateway route. The comment after each line must contain which route name it represents.
+# Most of APIs has a qps number, offered by QA team.  That usually means the max qps for the whole 4 gateway cluster.
+# How to setup the RateLimit value, it is a sophistcated question and need take a lot of factors into account.
+# 1. For most query-APIs, we can setup a rate limit up to the 1/4 of max qps, as the config is for only one gateway instance.
+# 2. Also we avoid to setup a too large or too small rate limit value.
+# 3. For upload/download APIs, it is diffiult to use a rate limit as a protect mechanism for the servers. Because the performance of upload/download interactions usually dependens on how large the file is processed.
+# 4. We tetatively setup 50~75 as the rate limit for the download/upload APIs and we can ajdust them once we have a better experience.
+# 5. Currently, please only put one name inside the name list of PathPatttern
+
 # optional
-PathPattern = [{Key = "/auth/request_nonce", RateLimit = 100, RatePeriod = 'S'}, {Key = "/auth/update_key", RateLimit = 100, RatePeriod = 'S'},
-{Key = "/permission/.+/[^/]*/.+", RateLimit = 100, RatePeriod = 'S'},{Key = "/greenfield/admin/v1/get-approval", RateLimit = 100, RatePeriod = 'S'},
-{Key = "/greenfield/admin/v1/challenge", RateLimit = 20, RatePeriod = 'S'},
-{Key = "/greenfield/admin/v2/challenge", RateLimit = 20, RatePeriod = 'S'},
-{Key = "/greenfield/receiver/v1/replicate-piece", RateLimit = 100, RatePeriod = 'S'},{Key = "/greenfield/recovery/v1/get-piece", RateLimit = 50, RatePeriod = 'S'},
-{Key = "/greenfield/migrate/v1/notify-migrate-swap-out-task", RateLimit = 10, RatePeriod = 'S'},{Key = "/greenfield/migrate/v1/migrate-piece", RateLimit = 10, RatePeriod = 'S'},
-{Key = "/greenfield/migrate/v1/migration-bucket-approval", RateLimit = 10, RatePeriod = 'S'},{Key = "/greenfield/migrate/v1/get-swap-out-approval", RateLimit = 10, RatePeriod = 'S'},
-{Key = "/download/[^/]*/.+", RateLimit = 150, RatePeriod = 'S'},{Key = "/download", RateLimit = 150, RatePeriod = 'S'},
-{Key = "/view/[^/]*/.+", RateLimit = 150, RatePeriod = 'S'},{Key = "/view", RateLimit = 150, RatePeriod = 'S'},
-{Key = "/status", RateLimit = 200, RatePeriod = 'S'},{Key = "/.+/.+[?]offset.*", RateLimit = 20, RatePeriod = 'S'},
-{Key = "/.+/.+[?]upload-context.*", RateLimit = 20, RatePeriod = 'S'},{Key = "/.+/.+[?]upload-progress.*", RateLimit = 20, RatePeriod = 'S'},
-{Key = "/.+/.+[?]bucket-meta.*", RateLimit = 200, RatePeriod = 'S'},{Key = "/.+/.+[?]object-meta.*", RateLimit = 200, RatePeriod = 'S'},
-{Key = "/.+/.+", RateLimit = 150, RatePeriod = 'S'},{Key = "/.+[?]read-quota.*", RateLimit = 100, RatePeriod = 'S'},{Key = "/.+[?]list-read-quota.*", RateLimit = 100, RatePeriod = 'S'},
-{Key = "/.+/$", RateLimit = 200, RatePeriod = 'S'},{Key = "/[?].*group-query.*", RateLimit = 200, RatePeriod = 'S'},
-{Key = "/[?].*objects-query.*", RateLimit = 200, RatePeriod = 'S'},{Key = "/[?].*buckets-query.*", RateLimit = 200, RatePeriod = 'S'},
-{Key = "/[?].*verify-id.*", RateLimit = 200, RatePeriod = 'S'},{Key = "/[?].*user-groups.*", RateLimit = 200, RatePeriod = 'S'},
-{Key = "/[?].*group-members.*", RateLimit = 200, RatePeriod = 'S'},{Key = "/[?].*owned-groups.*", RateLimit = 200, RatePeriod = 'S'},
-{Key = "/$", RateLimit = 200, RatePeriod = 'S'},{Key = "/.+", RateLimit = 200, RatePeriod = 'S'}]
-# optional
+PathPattern = [
+    {Key = "/auth/request_nonce", Method = "GET", Names = ["GetRequestNonce"]},
+    {Key = "/auth/update_key", Method = "POST", Names = ["UpdateUserPublicKey"]},
+    {Key = "/permission/.+/[^/]*/.+", Method = "GET", Names = ["VerifyPermission"]},
+    {Key = "/greenfield/admin/v1/get-approval", Method = "GET", Names = ["GetApproval"]},
+    {Key = "/greenfield/admin/v1/challenge", Method = "GET", Names = ["GetChallengeInfo"]},
+    {Key = "/greenfield/admin/v2/challenge", Method = "GET", Names = ["GetChallengeInfo"]},
+    {Key = "/greenfield/receiver/v1/replicate-piece", Method = "PUT", Names = ["ReplicateObjectPiece"]},
+    {Key = "/greenfield/recovery/v1/get-piece", Method = "GET", Names = ["RecoveryPiece"]},
+    {Key = "/greenfield/migrate/v1/notify-migrate-swap-out-task", Method = "POST", Names = ["NotifyMigrateSwapOut"]},
+    {Key = "/greenfield/migrate/v1/migrate-piece", Method = "GET", Names = ["MigratePiece"]},
+    {Key = "/greenfield/migrate/v1/migration-bucket-approval", Method = "GET", Names = ["MigrationBucketApproval"]},
+    {Key = "/greenfield/migrate/v1/get-swap-out-approval", Method = "GET", Names = ["SwapOutApproval"]},
+    {Key = "/download/[^/]*/.+", Method = "GET", Names = ["DownloadObjectByUniversalEndpoint"]},{Key = "/download", Method = "GET", Names = ["DownloadObjectByUniversalEndpoint"]},
+    {Key = "/view/[^/]*/.+", Method = "GET", Names = ["ViewObjectByUniversalEndpoint"]},{Key = "/view", Method = "GET", Names = ["ViewObjectByUniversalEndpoint"]},
+    {Key = "/status", Method = "GET", Names = ["GetStatus"]},
+    {Key = "/.+/.+[?]offset.*", Method = "POST", Names = ["ResumablePutObject"]},
+    {Key = "/.+/.+[?]upload-context.*", Method = "GET", Names = ["QueryResumeOffset"]},
+    {Key = "/.+/.+[?]upload-progress.*", Method = "GET", Names = ["QueryUploadProgress"]},
+    {Key = "/.+/.+[?]bucket-meta.*", Method = "GET", Names = ["GetBucketMeta"]},
+    {Key = "/.+/.+[?]object-meta.*", Method = "GET", Names = ["GetObjectMeta"]},
+    {Key = "/.+/.+[?]object-policies.*", Method = "GET", Names = ["ListObjectPolicies"]},
+    {Key = "/.+[?]read-quota.*", Method = "GET", Names = ["GetBucketReadQuota"]},
+    {Key = "/.+[?]list-read-quota.*", Method = "GET", Names = ["ListBucketReadRecord"]},
+    {Key = "/[?].*group-query.*", Method = "GET", Names = ["GetGroupList"]},
+    {Key = "/[?].*objects-query.*", Method = "GET", Names = ["ListObjectsByIDs"]},
+    {Key = "/[?].*buckets-query.*", Method = "GET", Names = ["ListBucketsByIDs"]},
+    {Key = "/[?].*verify-id.*", Method = "GET", Names = ["VerifyPermissionByID"]},
+    {Key = "/[?].*user-groups.*", Method = "GET", Names = ["GetUserGroups"]},
+    {Key = "/[?].*group-members.*", Method = "GET", Names = ["GetGroupMembers"]},
+    {Key = "/[?].*owned-groups.*", Method = "GET", Names = ["GetUserOwnedGroups"]},
+
+    {Key = "/.+/$", Method = "GET", Names = ["ListObjectsByBucket"]},
+    {Key = "/.+/.+", Method = "GET", Names = ["GetObject"]},
+    {Key = "/.+/.+", Method = "PUT", Names = ["PutObject"]},
+    {Key = "/$", Method = "GET", Names = ["GetUserBuckets"]},
+
+]
+
+NameToLimit = [
+    {Name = "GetRequestNonce", RateLimit = 100, RatePeriod = 'S'}, # requestNonceRouterName 3000qps
+    {Name = "UpdateUserPublicKey", RateLimit = 100, RatePeriod = 'S'}, # updateUserPublicKeyRouterName 4000qps
+    {Name = "VerifyPermission", RateLimit = 100, RatePeriod = 'S'}, # verifyPermissionRouterName  1200qps
+    {Name = "GetApproval", RateLimit = 35, RatePeriod = 'S'}, # approvalRouterName  150qps
+    {Name = "GetChallengeInfo", RateLimit = 20, RatePeriod = 'S'}, # getChallengeInfoRouterName, no test data
+    {Name = "ReplicateObjectPiece", RateLimit = 1000, RatePeriod = 'S'},  # replicateObjectPieceRouterName, no test data. Internal API among sps, no rate limit is needed.
+    {Name = "RecoveryPiece", RateLimit = 1000, RatePeriod = 'S'}, # recoveryPieceRouterName, no test data. Internal API among sps, no rate limit is needed.
+    {Name = "NotifyMigrateSwapOut", RateLimit = 10, RatePeriod = 'S'},  # notifyMigrateSwapOutRouterName, no test data. Internal API among sps, no rate limit is needed.
+    {Name = "MigratePiece", RateLimit = 10, RatePeriod = 'S'}, # migratePieceRouterName, no test data
+    {Name = "MigrationBucketApproval", RateLimit = 10, RatePeriod = 'S'}, # migrationBucketApprovalName, no test data
+    {Name = "SwapOutApproval", RateLimit = 10, RatePeriod = 'S'}, # swapOutApprovalName, no test data
+    {Name = "DownloadObjectByUniversalEndpoint", RateLimit = 50, RatePeriod = 'S'}, # downloadObjectByUniversalEndpointName, 50qps
+    {Name = "ViewObjectByUniversalEndpoint", RateLimit = 50, RatePeriod = 'S'}, # viewObjectByUniversalEndpointName, 50qps
+    {Name = "GetStatus", RateLimit = 200, RatePeriod = 'S'},# getStatusRouterName, 2000qps
+    {Name = "ResumablePutObject", RateLimit = 30, RatePeriod = 'S'}, # resumablePutObjectRouterName , test data is same as putObject object 10qps
+    {Name = "QueryResumeOffset", RateLimit = 30, RatePeriod = 'S'},  # queryResumeOffsetName, test data is same as putObject object 10qps
+    {Name = "QueryUploadProgress", RateLimit = 50, RatePeriod = 'S'}, # queryUploadProgressRouterName, test data is same as putObject object 10qps
+    {Name = "GetBucketMeta", RateLimit = 100, RatePeriod = 'S'}, # getBucketMetaRouterName, 400qps
+    {Name = "GetObjectMeta", RateLimit = 100, RatePeriod = 'S'}, # getObjectMetaRouterName, 400qps
+    {Name = "ListObjectPolicies", RateLimit = 200, RatePeriod = 'S'}, # listObjectPoliciesRouterName, 2000qps
+    {Name = "GetBucketReadQuota", RateLimit = 200, RatePeriod = 'S'}, # getBucketReadQuotaRouterName
+    {Name = "ListBucketReadRecord", RateLimit = 100, RatePeriod = 'S'}, # listBucketReadRecordRouterName
+    {Name = "GetGroupList", RateLimit = 200, RatePeriod = 'S'}, # getGroupListRouterName， similar to getUserGroupsRouterName, 2000qps
+    {Name = "ListObjectsByIDs", RateLimit = 200, RatePeriod = 'S'}, # listObjectsByIDsRouterName, 1200qps
+    {Name = "ListBucketsByIDs", RateLimit = 200, RatePeriod = 'S'}, # listBucketsByIDsRouterName, 2000qps
+    {Name = "VerifyPermissionByID", RateLimit = 200, RatePeriod = 'S'}, # verifyPermissionByIDRouterName, 1200qps
+    {Name = "GetUserGroups", RateLimit = 200, RatePeriod = 'S'}, # getUserGroupsRouterName, 2000qps
+    {Name = "GetGroupMembers", RateLimit = 200, RatePeriod = 'S'}, # getGroupMembersRouterName, 2000qps
+    {Name = "GetUserOwnedGroups", RateLimit = 200, RatePeriod = 'S'}, # getUserOwnedGroupsRouterName, 2000qps
+
+    {Name = "ListObjectsByBucket", RateLimit = 75, RatePeriod = 'S'}, # listObjectsByBucketRouterName, 300qps
+    {Name = "GetObject", RateLimit = 75, RatePeriod = 'S'}, # getObjectRouterName, 100 qps
+    {Name = "PutObject", RateLimit = 75, RatePeriod = 'S'}, # putObjectRouterName, 100 qps
+    {Name = "GetUserBuckets", RateLimit = 75, RatePeriod = 'S'}] # getUserBucketsRouterName, 1000 qps
+
 HostPattern = []
 
 [Manager]
