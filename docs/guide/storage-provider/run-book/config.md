@@ -33,6 +33,8 @@ ConnMaxIdleTime = 0
 MaxIdleConns = 0
 # optional
 MaxOpenConns = 0
+# optional
+EnableTracePutEvent = false
 
 [BsDB]
 # required
@@ -51,6 +53,8 @@ ConnMaxIdleTime = 0
 MaxIdleConns = 0
 # optional
 MaxOpenConns = 0
+# optional
+EnableTracePutEvent = false
 
 [PieceStore]
 # required
@@ -101,7 +105,7 @@ CompleteMigrateBucketFeeAmount = 0
 SpOperatorAddress = ''
 # required
 OperatorPrivateKey = ''
-# FundingPrivateKey doesn't need to write
+# optional
 FundingPrivateKey = ''
 # required
 SealPrivateKey = ''
@@ -170,9 +174,18 @@ ListenSealRetryTimeout = 0
 # optional
 MaxListenSealRetry = 0
 # optional
+MaxObjectMigrationRetry = 0
+# optional
+ObjectMigrationRetryTimeout = 0
+# optional
 EnableSkipFailedToMigrateObject = false
+# optional
+BucketTrafficKeepTimeDay = 0
+# optional
+ReadRecordKeepTimeDay = 0
+# optional
+ReadRecordDeleteLimit = 0
 
-# now we don't use p2p, this item doesn't need to fill
 [P2P]
 # optional
 P2PPrivateKey = ''
@@ -201,12 +214,6 @@ GlobalSealObjectParallel = 0
 # optional
 GlobalReceiveObjectParallel = 0
 # optional
-GlobalGCObjectParallel = 0
-# optional
-GlobalGCZombieParallel = 0
-# optional
-GlobalGCMetaParallel = 0
-# optional
 GlobalRecoveryPieceParallel = 0
 # optional
 GlobalMigrateGVGParallel = 0
@@ -217,13 +224,15 @@ GlobalDownloadObjectTaskCacheSize = 0
 # optional
 GlobalChallengePieceTaskCacheSize = 0
 # optional
-GlobalBatchGcObjectTimeInterval = 0
-# optional
-GlobalGcObjectBlockInterval = 0
-# optional
-GlobalGcObjectSafeBlockDistance = 0
-# optional
 GlobalSyncConsensusInfoInterval = 0
+# optional
+GlobalGCObjectParallel = 0
+# optional
+GlobalGCBucketMigrationParallel = 0
+# optional
+GlobalGCZombieParallel = 0
+# optional
+GlobalGCMetaParallel = 0
 # optional
 UploadObjectParallelPerNode = 0
 # optional
@@ -259,17 +268,17 @@ ReceiveTaskSpeed = 0
 # optional
 SealObjectTaskTimeout = 0
 # optional
-GcObjectTaskTimeout = 0
-# optional
-GcZombieTaskTimeout = 0
-# optional
-GcMetaTaskTimeout = 0
-# optional
 SealObjectTaskRetry = 0
 # optional
 ReplicateTaskRetry = 0
 # optional
 ReceiveConfirmTaskRetry = 0
+# optional
+GcObjectTaskTimeout = 0
+# optional
+GcZombieTaskTimeout = 0
+# optional
+GcMetaTaskTimeout = 0
 # optional
 GcObjectTaskRetry = 0
 # optional
@@ -296,61 +305,11 @@ ProbeHTTPAddress = ''
 # optional
 DisableRcmgr = false
 
-# optional
-[Rcmgr.GfSpLimiter]
-# optional
-[Rcmgr.GfSpLimiter.System]
-# optional
-Memory = 0
-# optional
-Tasks = 0
-# optional
-TasksHighPriority = 0
-# optional
-TasksMediumPriority = 0
-# optional
-TasksLowPriority = 0
-# optional
-Fd = 0
-# optional
-Conns = 0
-# optional
-ConnsInbound = 0
-# optional
-ConnsOutbound = 0
-
-# optional
-[Rcmgr.GfSpLimiter.Transient]
-# optional
-Memory = 0
-# optional
-Tasks = 0
-# optional
-TasksHighPriority = 0
-# optional
-TasksMediumPriority = 0
-# optional
-TasksLowPriority = 0
-# optional
-Fd = 0
-# optional
-Conns = 0
-# optional
-ConnsInbound = 0
-# optional
-ConnsOutbound = 0
-
 [Log]
 # optional
 Level = ''
 # optional
 Path = ''
-
-[Metadata]
-# required
-IsMasterDB = false
-# optional
-BsDBSwitchCheckIntervalSec = 0
 
 [BlockSyncer]
 # required
@@ -367,6 +326,8 @@ PathPattern = []
 HostPattern = []
 # optional
 APILimits = []
+# optional
+NameToLimit = []
 
 [APIRateLimiter.IPLimitCfg]
 # optional
@@ -380,6 +341,8 @@ RatePeriod = ''
 # optional
 EnableLoadTask = false
 # optional
+EnableHealthyChecker = false
+# optional
 SubscribeSPExitEventIntervalMillisecond = 0
 # optional
 SubscribeSwapOutExitEventIntervalMillisecond = 0
@@ -387,6 +350,32 @@ SubscribeSwapOutExitEventIntervalMillisecond = 0
 SubscribeBucketMigrateEventIntervalMillisecond = 0
 # optional
 GVGPreferSPList = []
+# optional
+SPBlackList = []
+# optional
+EnableTaskRetryScheduler = false
+# optional
+RejectUnsealThresholdSecond = 0
+
+[GC]
+# optional
+GCObjectTimeInterval = 0
+# optional
+GCObjectBlockInterval = 0
+# optional
+GCObjectSafeBlockDistance = 0
+# optional
+EnableGCZombie = false
+# optional
+GCZombieSafeObjectIDDistance = 0
+# optional
+GCZombiePieceTimeInterval = 0
+# optional
+GCZombiePieceObjectIDInterval = 0
+# optional
+EnableGCMeta = false
+# optional
+GCMetaTimeInterval = 0
 ```
 
 ### App info
@@ -739,6 +728,8 @@ HostPattern = []
 EnableLoadTask = true
 # optional
 GVGPreferSPList = [1,2,3,4,5,6,7]
+# optional
+EnableTaskRetryScheduler = true
 
 [Executor]
 # optional

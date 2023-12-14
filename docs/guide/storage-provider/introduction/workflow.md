@@ -42,7 +42,7 @@ Upload to PrimarySP flow chart is shown below:
 ### [Uploader](../modules/uploader)
 
 - Uploader accepts object data in a streaming format and divides it into segments based on the `MaxSegmentSize`, which is determined by consensus in the Greenfield chain. The segmented data is then stored in the PieceStore.
-- Uploader creates a JobContext with an initial state of `INIT_UNSPECIFIED`. Upon beginning the upload of segments, the JobContext's state transitions to `UPLOAD_OBJECT_DOING`. Once all segments have been uploaded, the JobContext's state changes to `UPLOAD_OBJECT_DONE`. In the event of any abnormal situations during the upload, the JobContext's state will change to `UPLOAD_OBJECT_ERROR`.
+- Uploader creates a TaskContext with an initial state of `INIT_UNSPECIFIED`. Upon beginning the upload of segments, the TaskContext's state transitions to `UPLOAD_OBJECT_DOING`. Once all segments have been uploaded, the TaskContext's state changes to `UPLOAD_OBJECT_DONE`. In the event of any abnormal situations during the upload, the TaskContext's state will change to `UPLOAD_OBJECT_ERROR`.
 - After uploading all segments, insert segments data checksums and root checksum into the SP DB.
 - Uploader creates an upload object task for Manager and returns a success message to the client indicating that the put object request is successful.
 
@@ -56,7 +56,7 @@ Replicate to SecondarySP flow chart is shown below:
 - The object data is asynchronously replicated to virtual group secondary SPs.
 - TaskExecutor retrieves segments from the PieceStore in parallel and uses `Erasure Coding(EC)` to compute a data redundancy solution for these segments, generating the corresponding EC pieces. The EC pieces are then organized into six replicate data groups, with each group containing several EC pieces based on the Redundancy policy.
 - Then sends the replicate data groups in streaming to the selected secondary SPs in parallel.
-- The JobContext's secondary SP information is updated once the replication of a secondary SP is completed. The JobContext's state changes from `REPLICATE_OBJECT_DOING` to `REPLICATE_OBJECT_DONE` only after all secondary SPs have completed replication.
+- The TaskContext's secondary SP information is updated once the replication of a secondary SP is completed. The TaskContext's state changes from `REPLICATE_OBJECT_DOING` to `REPLICATE_OBJECT_DONE` only after all secondary SPs have completed replication.
 
 ### [Receiver](../modules/receiver)
 
@@ -67,8 +67,8 @@ Replicate to SecondarySP flow chart is shown below:
 ### [TaskExecutor](../modules/taskexecutor)
 
 - Receives the response from secondary SPs' Receiver, and unsigned the signature to compare with the secondary SP's approval public key.
-- Sends the MsgSealObject to the Signer for signing the seal object transaction and broadcasting to the Greenfield chain with the secondary SPs' integrity hash and signature. The state of the JobContext turns to `SIGN_OBJECT_DOING` from `REPLICATE_OBJECT_DONE`. If Signer succeeds to broadcast the SealObjectTX, changes `SEAL_OBJECT_TX_DOING` state immediately into `SIGN_OBJECT_DONE` state.
-- Monitor the execution results of seal object transaction on the Greenfield chain to determine whether the seal is successful. If so, the JobContext state is changed into `SEAL_OBJECT_DONE` state.
+- Sends the MsgSealObject to the Signer for signing the seal object transaction and broadcasting to the Greenfield chain with the secondary SPs' integrity hash and signature. The state of the TaskContext turns to `SIGN_OBJECT_DOING` from `REPLICATE_OBJECT_DONE`. If Signer succeeds to broadcast the SealObjectTX, changes `SEAL_OBJECT_TX_DOING` state immediately into `SIGN_OBJECT_DONE` state.
+- Monitor the execution results of seal object transaction on the Greenfield chain to determine whether the seal is successful. If so, the TaskContext state is changed into `SEAL_OBJECT_DONE` state.
 
 See request and response details for this API: [PutObject](../../../api/storage-provider-rest/put_object).
 
@@ -83,7 +83,7 @@ Users can download an object from PrimarySP. The flow chart is shown below:
 - Receives the GetObject request from the client.
 - Verifies the signature of request to ensure that the request has not been tampered with.
 - Checks the authorization to ensure the corresponding account has permissions on resources.
-- Checks the object state and payment account state to ensure the object is sealed and the payment account is active.
+- Checks the object state and payment account state to ensure the object is uploaded in the primary SP, and the payment account is active.
 - Dispatches the request to Downloader.
 
 ### [Downloader](../modules/downloader)
