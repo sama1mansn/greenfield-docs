@@ -13,6 +13,7 @@ This guide helps you set up an SP Node. Once you set up the SP Node successfully
     - [1. Support both path-style and virtual-style routers in https certificates](#1-support-both-path-style-and-virtual-style-routers-in-https-certificates)
     - [2. CORS Configuration](#2-cors-configuration)
     - [3. Sample CORS Configuration for Nginx](#3-sample-cors-configuration-for-nginx)
+    - [4. Other Q&A on Nginx config](#4-other-qa-on-nginx-config)
 - [Create Storage Provider](#create-storage-provider)
   - [1. Compile SP](#1-compile-sp)
   - [2. SP Config](#2-sp-config)
@@ -233,6 +234,22 @@ server {
 }
 
 ```
+
+#### 4. Other Q&A on Nginx config
+We observed that some SPs use nginx as their reverse-proxy layer. In this section , we will list some known best practises on nginx config.
+
+- proxy_pass and proxy_set_header
+  
+  If your nginx uses proxy_pass directive to pass a request to a proxied server (e.g. the SP gateway microservice), you need also use proxy_set_header to set the HOST header. 
+  Otherwise, the head of request passed to the SP gateway, will be parsed as 127.0.0.1. In this case, the SP gateway could not verify the signature of the user requests.
+  
+  ```config
+  location / {
+    proxy_pass http://127.0.0.1:9033
+    proxy_set_header Host $host;
+  }
+  
+  ```
 
 ## Create Storage Provider
 
