@@ -134,7 +134,7 @@ This is the encoding we expect to see
 
 ### PieceStore Configuration
 
-Please follow this [doc](./piece-store) to config your PieceStore.
+Please follow this [doc](./piece-store.md) to config your PieceStore.
 
 ### Gateway Configuration
 
@@ -253,7 +253,7 @@ cd greenfield-storage-provider/build
 
 #### Write config
 
-You can learn about how to write your `config.toml` file [here](./config)
+You can learn about how to write your `config.toml` file [here](./config.md)
 
 It's recommended to deploy Kubernetes cluster following this [guide](https://github.com/bnb-chain/greenfield-sp-deployment/blob/main/docs/README.md). The corresonding config file is [here](https://github.com/bnb-chain/greenfield-sp-deployment/blob/main/docs/k8s/aws/config.toml).
 
