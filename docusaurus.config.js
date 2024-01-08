@@ -41,6 +41,10 @@ const config = {
         theme: {
           customCss: require.resolve("./src/css/custom.css")
         },
+        gtag: {
+          trackingID: 'G-LSRFL0KHRR',
+          anonymizeIP: true,
+        },
         sitemap: {
           changefreq: 'weekly',
           priority: 0.5,
@@ -48,13 +52,6 @@ const config = {
           filename: 'sitemap.xml',
         }
       })
-    ],
-    [
-      '@docusaurus/plugin-google-gtag',
-      {
-        trackingID: 'G-LSRFL0KHRR',
-        anonymizeIP: true,
-      },
     ],
   ],
 
