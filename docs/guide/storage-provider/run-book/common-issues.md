@@ -189,49 +189,6 @@ Nginx does not support large file
 
 Enlarge `proxy-boody-size`
 
-### 7. SP Configuration Changelogs
-
-#### Testnet Exclusive
-Considering the maintenance cost of SP, the Greenfield Testnet will not permanently store user data. It is recommended
-to enable the following settings for Testnet's SP, which will automatically delete buckets created more than 90 days ago.
-```diff
-[Parallel]
--DiscontinueBucketEnabled = false
--DiscontinueBucketKeepAliveDays = 365
-+DiscontinueBucketEnabled = true
-+DiscontinueBucketKeepAliveDays = 90
-```
-
-#### v1.2.2
-Version 1.2.2 has introduced several enhancements to improve the stability of the SP. Here are some suggested configurations
-for all SPs to take note of.
-```diff
- [BlockSyncer]
--Modules = ['epoch','bucket','object','payment','group','permission','storage_provider','prefix_tree','virtual_group','sp_exit_events','object_id_map']
-+Modules = ['epoch','bucket','object','payment','group','permission','storage_provider','prefix_tree','virtual_group','sp_exit_events','object_id_map','general']
- BsDBWriteAddress = "tf-dex-preview-gnfd-testnet-sp-b-db.cluster-cqiexhbenqhn.us-east-1.rds.amazonaws.com:3306"
- Workers = 50
-
- [Manager]
- EnableLoadTask = true
-+EnableHealthyChecker = true
- GVGPreferSPList = [1,2,3,4,5,6,7]
- SPBlackList = [10,11,12,13,15,16]
-+EnableTaskRetryScheduler = true
-
- [Executor]
- ListenSealRetryTimeout = 30
-+BucketTrafficKeepTimeDay = 180
-+ReadRecordKeepTimeDay = 180
-+
-+[GC]
-+EnableGCZombie = true
-+EnableGCMeta = true
-+# 86400 seconds means one day
-+GCMetaTimeInterval = 86400
-```
-
-
 ## DCellar Integration Issues
 
 ### 1. No 'Access-Control-Allow-Origin' header is present on the requested resource
