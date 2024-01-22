@@ -308,12 +308,12 @@ const sidebars = {
             {
               type: 'link',
               label: 'Data Marketplace BSC Testnet Demo', // The link label
-              href: 'https://data-marketplace.gnfd-testnet-sp4.bnbchain.org/index.html',
+              href: 'https://marketplace.greenfield-sp.bnbchain.org/bsc-testnet.html',
             },
              {
               type: 'link',
               label: 'Data Marketplace opBNB Testnet Demo', // The link label
-              href: 'https://data-marketplace.testnet-opbnb.bnbchain.org/',
+              href: 'https://marketplace.greenfield-sp.bnbchain.org/opbnb-testnet.html',
             },
           ]
         },

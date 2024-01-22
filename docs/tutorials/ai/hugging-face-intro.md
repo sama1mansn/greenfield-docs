@@ -27,7 +27,7 @@ The Greenfield Blockchain is a very good place to store machine learning models 
 
 ![img](https://lh7-us.googleusercontent.com/J25Ptj9c7r6IeJ2WHw-cAdbMxmjLmYZPD7fTPUGrGggyS3iqqoPi8F-y40rvxVKaX7wEgjODWHb7xjC63b1Fz74RWQz9j7Ftd3IdUw9rpEwtCbc-swyV1q0KgKb27j6QHvfZDptSMwDjljgeC3lIaSI)
 
-The [data marketplace](https://data-marketplace.gnfd-testnet-sp4.bnbchain.org/index.html#/) on Greenfield empowers users to sell or trade high-quality machine learning datasets and models. Whether you're a seasoned data scientist or an organization with valuable data assets, our marketplace provides a secure and efficient space to monetize your creations or discover unique datasets and models crafted by others.
+The [data marketplace](https://marketplace.greenfield-sp.bnbchain.org/bsc-testnet.html) on Greenfield empowers users to sell or trade high-quality machine learning datasets and models. Whether you're a seasoned data scientist or an organization with valuable data assets, our marketplace provides a secure and efficient space to monetize your creations or discover unique datasets and models crafted by others.
 
 # The Potential Architecture of AI in Greenfield
 

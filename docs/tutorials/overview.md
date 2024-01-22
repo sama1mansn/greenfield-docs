@@ -13,7 +13,7 @@ and sell data assets, including digital publications, scientific experimental da
 
 ### Demo Link
 - Mainnet: `https://marketplace.greenfield-sp.bnbchain.org/index.html`
-- Testnet: `https://data-marketplace.gnfd-testnet-sp4.bnbchain.org/index.html`
+- Testnet: `https://marketplace.greenfield-sp.bnbchain.org/bsc-testnet.html`
 
 ### Source Code
 - Frontend: `https://github.com/bnb-chain/greenfield-data-marketplace-frontend`
